@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9bd814fd42861449d22ab311a05849, type: 3}
+  m_Name: AgentSettings
+  m_EditorClassIdentifier: 
+  _agents:
+  - _id: Agent.Cat1
+    _displayName: Cat1
+    _description: gato
+    _icon: {fileID: 0}
+    _agentPrefab: {fileID: 8878254136039088324, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+    _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}

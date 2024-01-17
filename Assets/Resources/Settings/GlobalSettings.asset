@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d8a12ea8ff21640a3358c626ad00aa, type: 3}
+  m_Name: GlobalSettings
+  m_EditorClassIdentifier: 
+  RunnerPrefab: {fileID: 5559613881515596966, guid: 48d93a78754dc2d45aa4446546786a4f, type: 3}
+  LoadingScene: LoadingScene
+  MenuScene: Menu
+  Agent: {fileID: 11400000, guid: 56bcab5d64146c04794e76e5ed5efef7, type: 2}
+  Map: {fileID: 11400000, guid: 13919797108fd06418246ce2470945e7, type: 2}
+  Network: {fileID: 11400000, guid: a7baa981db9d2b94fb66b0411c4f9289, type: 2}
+  DefaultOptions:
+    _values:
+    - Key: Region
+      Type: 4
+      BoolValue: 0
+      FloatValue:
+        Value: 0
+        MinValue: 0
+        MaxValue: 0
+      IntValue:
+        Value: 0
+        MinValue: 0
+        MaxValue: 0
+      StringValue: sa
+    - Key: LimitFPS
+      Type: 1
+      BoolValue: 1
+      FloatValue:
+        Value: 0
+        MinValue: 0
+        MaxValue: 0
+      IntValue:
+        Value: 0
+        MinValue: 0
+        MaxValue: 0
+      StringValue: 
+    - Key: TargetFPS
+      Type: 3
+      BoolValue: 0
+      FloatValue:
+        Value: 0
+        MinValue: 0
+        MaxValue: 0
+      IntValue:
+        Value: 60
+        MinValue: 30
+        MaxValue: 90
+      StringValue: 
+    - Key: VSync
+      Type: 1
+      BoolValue: 1
+      FloatValue:
+        Value: 0
+        MinValue: 0
+        MaxValue: 0
+      IntValue:
+        Value: 60
+        MinValue: 30
+        MaxValue: 90
+      StringValue: 
