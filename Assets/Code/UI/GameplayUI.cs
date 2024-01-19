@@ -4,18 +4,8 @@ using UnityEngine;
 
 namespace CatGame
 {
-    public class GameplayUI : MonoBehaviour
+    public class GameplayUI : BaseService
     {
-        // Start is called before the first frame update
-        void Start()
-        {
         
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }

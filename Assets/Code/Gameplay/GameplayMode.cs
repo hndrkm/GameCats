@@ -73,6 +73,10 @@ namespace CatGame
 
 
         }
+        public override void Spawned()
+        {
+            //Context.GameplayMode = this;
+        }
         public void AgentDeath(Agent victim, HitData hitData)
         {
             if (Runner.IsServer == false)
@@ -84,7 +88,7 @@ namespace CatGame
 
         public void PlayerJoined(Player player)
         {
-
+            
         }
         protected virtual void OnActivate() { }
 

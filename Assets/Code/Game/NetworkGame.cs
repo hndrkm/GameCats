@@ -31,7 +31,7 @@ namespace CatGame
             if (Object.HasStateAuthority==true) 
             {
                 var prefab = _modePrefabs.Find(t=>t.Type == gameplayType);
-                _gameplayMode = Runner.Spawn(prefab);
+                _gameplayMode = Runner.Spawn(prefab,onBeforeSpawned:OnSpawGamePlayMode);
             }
             _localPlayer = Runner.LocalPlayer;
             _fusionCallbacks.DisconnectedFromServer -= OnDisconnectedFromServer;
@@ -39,6 +39,12 @@ namespace CatGame
             Runner.RemoveCallbacks(_fusionCallbacks);
             Runner.AddCallbacks(_fusionCallbacks);
             ActivePlayerCount = 0;
+
+        }
+        private void OnSpawGamePlayMode(NetworkRunner runner,NetworkObject gameMode) 
+        {
+            gameMode.GetComponent<GameplayMode>().Context = Context;
+            Context.GameplayMode = gameMode.GetComponent<GameplayMode>();
         }
         public void Activate() 
         {
@@ -47,9 +53,10 @@ namespace CatGame
             {
                 return;
             }
+            _gameplayMode.Activate();
             foreach (var playerRef in Runner.ActivePlayers)
             {
-                SpawnPlayer(playerRef);
+               // SpawnPlayer(playerRef);
             }
         }
         public Player GetPlayer(PlayerRef playerRef) 
@@ -67,7 +74,11 @@ namespace CatGame
             {
                 if(player == null)
                     continue;
-                
+                var statistics =player.Statistics;
+                if (statistics.IsValid == false)
+                {
+                    continue;
+                }
                 players++;
             }
             return players;
@@ -142,6 +153,7 @@ namespace CatGame
         }
         private void SpawnPlayer(PlayerRef playerRef) 
         {
+            
             if (Players[playerRef.PlayerId] != null || _pendingPlayers.ContainsKey(playerRef) ==true) 
             {
                 Log.Error($"El Player {playerRef} esta ya en el juego!");
@@ -150,23 +162,10 @@ namespace CatGame
             var player = Runner.Spawn(_playerPrefab,inputAuthority: playerRef);
             Runner.SetPlayerAlwaysInterested(playerRef, player.Object, true);
             _pendingPlayers[playerRef] = player;
+#if UNITY_EDITOR
             player.gameObject.name = $"player (pendiente)";
+#endif
         }
-        private void PrintInfo()
-        {
-            
-            Debug.Log($"Environment.CommandLine: {Environment.CommandLine}");
-            Debug.Log($"SystemInfo.deviceModel: {SystemInfo.deviceModel}");
-            Debug.Log($"SystemInfo.deviceName: {SystemInfo.deviceName}");
-            Debug.Log($"SystemInfo.deviceType: {SystemInfo.deviceType}");
-            Debug.Log($"SystemInfo.processorCount: {SystemInfo.processorCount}");
-            Debug.Log($"SystemInfo.processorFrequency: {SystemInfo.processorFrequency}");
-            Debug.Log($"SystemInfo.processorType: {SystemInfo.processorType}");
-            Debug.Log($"SystemInfo.systemMemorySize: {SystemInfo.systemMemorySize}");
-        }
-
-
-
         private void OnDisconnectedFromServer(NetworkRunner runner)
         {
             if (runner != null) 

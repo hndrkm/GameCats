@@ -64,7 +64,7 @@ namespace CatGame
                 Debug.LogError("No se puede comenzar con varios Peers. PeerMode esta configurado en unico.");
                 request.ExtraPeers = 0;
             }
-
+            Debug.Log(request.ScenePath);
             SceneRef sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath(request.ScenePath));
 
             int totalPeers = 1 + request.ExtraPeers;
@@ -110,8 +110,97 @@ namespace CatGame
         {
             ErrorStatus = null;
         }
+        protected void Awake()
+        {
+            _loadingScene = Global.Settings.LoadingScene;
+        }
+        protected void Update()
+        {
+            if (_pendingSession != null)
+            {
+                if (_currentSession == null)
+                {
+                    _currentSession = _pendingSession;
+                    _pendingSession = null;
+                }
+                else
+                {
+                    _currentSession.ConnectionRequested = false;
+                }
+            }
 
+            UpdateCurrentSession();
+            if (_coroutine == null && _currentSession != null && _currentSession.IsConnected == false)
+            {
+                if (_pendingSession == null)
+                {
+                    Log($"empezando LoadMenuCoroutine()");
+                    _coroutine = StartCoroutine(LoadMenuCoroutine());
+                }
 
+                _currentSession = null;
+            }
+        }
+        public void UpdateCurrentSession()
+        {
+            if (_currentSession == null)
+            {
+                Status = string.Empty;
+                StatusDescription = string.Empty;
+                return;
+            }
+
+            if (_coroutine != null)
+                return;
+
+            var peers = _currentSession.GamePeers;
+
+            if (_stopGameOnDisconnect == true)
+            {
+                for (int i = 0; i < peers.Length; i++)
+                {
+                    if (_currentSession.ConnectionRequested == true && peers[i].IsConnected == false)
+                    {
+                        Log($"Stopping game after disconnect");
+                        _stopGameOnDisconnect = false;
+                        StopGame();
+                        return;
+                    }
+                }
+            }
+
+            for (int i = 0; i < peers.Length; i++)
+            {
+                var peer = peers[i];
+                bool isConnected = peer.IsConnected;
+
+                if (_currentSession.ConnectionRequested == true && peer.Loaded == false && isConnected == false && peer.CanConnect == true)
+                {
+                    Status = peer.WasConnected == false ? "Starting" : "Reconnecting";
+                    Log($"Starting ConnectPeerCoroutine() - {Status} - Peer {peer.ID}");
+                    _coroutine = StartCoroutine(ConnectPeerCoroutine(peer));
+                    return;
+                }
+                else if (_currentSession.ConnectionRequested == false && (isConnected == true || peer.Loaded == true))
+                {
+                    Status = "Saliendo";
+                    Log($"Starting DisconnectPeerCoroutine() - {Status} - Peer {peer.ID}");
+                    _coroutine = StartCoroutine(DisconnectPeerCoroutine(peer));
+                    return;
+                }
+                else if (peer.Loaded == true && isConnected == false)
+                {
+                    // perdida
+
+                    Status = "Connexion perdida";
+                    Log($"Starting DisconnectPeerCoroutine() - {Status} - Peer {peer.ID}");
+                    _coroutine = StartCoroutine(DisconnectPeerCoroutine(peer));
+                    return;
+                }
+            }
+
+            
+        }
         private IEnumerator ConnectPeerCoroutine(GamePeer peer, float connectionTimeout = 10f, float loadTimeout = 45f)
         {
             peer.Loaded = true;
@@ -156,15 +245,16 @@ namespace CatGame
             peer.Runner = runner;
             peer.SceneManager = runner.GetComponent<NetworkSceneManager>();
             peer.LoadedScene = default;
-
+            NetworkSceneInfo sceneInfo = new NetworkSceneInfo();
+            sceneInfo.AddSceneRef(peer.Scene,LoadSceneMode.Single);
             StartGameArgs startGameArgs = new StartGameArgs();
             startGameArgs.GameMode = peer.GameMode;
             startGameArgs.SessionName = peer.Request.SessionName;
-            startGameArgs.Scene = peer.Scene;
-           
+            startGameArgs.Scene = sceneInfo;
+            startGameArgs.EnableClientSessionCreation = false;
+            startGameArgs.ObjectProvider = pool;
             startGameArgs.CustomLobbyName = peer.Request.CustomLobby;
             startGameArgs.SceneManager = peer.SceneManager;
-
 
             if (peer.Request.MaxPlayers > 0)
             {
@@ -175,12 +265,6 @@ namespace CatGame
             {
                 startGameArgs.SessionProperties = CreateSessionProperties(peer.Request);
             }
-
-            if (peer.Request.IPAddress.HasValue() == true)
-                startGameArgs.Address = NetAddress.CreateFromIpPort(peer.Request.IPAddress, peer.Request.Port);
-            else if (peer.Request.Port > 0)
-                startGameArgs.Address = NetAddress.Any(peer.Request.Port);
-
             Log($"NetworkRunner.StartGame()");
             var startGameTask = runner.StartGame(startGameArgs);
 
@@ -282,7 +366,7 @@ namespace CatGame
                 }
             }
 
-            Debug.LogWarning($"{peerName} started on {runner.LobbyInfo.Name} in {(Time.realtimeSinceStartup - baseTime):0.00}s");
+            Debug.LogWarning($"{peerName} started on {runner.SessionInfo.Region} in {(Time.realtimeSinceStartup - baseTime):0.00}s");
 
             peer.LoadedScene = runner.SimulationUnityScene;
 
@@ -299,7 +383,6 @@ namespace CatGame
                 Log($"Waiting for GameplayScene - Peer {peer.ID}");
 
                 yield return null;
-
                 scene = peer.SceneManager.GameplayScene;
 
                 if (Time.realtimeSinceStartup >= limitTime)
@@ -330,7 +413,7 @@ namespace CatGame
 
             var networkGame = scene.GetComponentInChildren<NetworkGame>(true);
 
-            while (networkGame.Object == null)
+            while (networkGame.Object == null || networkGame.Context == null)
             {
                 Log($"Esperando NetworkGame - Peer {peer.ID}");
 
@@ -547,7 +630,7 @@ namespace CatGame
                 while (loadingSceneObject.IsFading == true)
                     yield return null;
             }
-
+            Debug.Log("se o");
             if (show == true && additionalTime > 0f)
             {
                 // Espere un tiempo que aparezca gradualmente

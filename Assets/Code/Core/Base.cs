@@ -250,7 +250,7 @@ namespace CatGame
 
             foreach (var service in services)
             {
-                Debug.Log(service.ToString());
+                Debug.Log($"{service.ToString()}....................................");
                 AddService(service);
             }
         }

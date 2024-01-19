@@ -21,7 +21,7 @@ namespace CatGame
         }
         protected override IEnumerator OnActivate()
         {
-            base.OnActivate();
+            yield return base.OnActivate();
             var asyncOP = SceneManager.LoadSceneAsync(UI_SCENE_NAME,LoadSceneMode.Additive);
             while (asyncOP.isDone == false) 
                 yield return null;
@@ -46,9 +46,14 @@ namespace CatGame
         {
             if (Context.Runner != null)
             {
-                Context.Runner.SetVisible(Context.IsVisible);
+                //Context.Runner.SetVisible(Context.IsVisible);
             }
             base.OnTick();
+        }
+        protected override void CollectServices()
+        {
+            base.CollectServices();
+            
         }
 
     }

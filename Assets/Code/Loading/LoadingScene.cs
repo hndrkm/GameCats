@@ -7,7 +7,7 @@ namespace CatGame
 {
     public class LoadingScene : MonoBehaviour
     {
-        public bool IsFading => _activeFader != null && !_activeFader.activeSelf == false;
+        public bool IsFading => _activeFader != null && _activeFader.activeSelf == false;
 
         [SerializeField]
         private GameObject _fadeInObject;
