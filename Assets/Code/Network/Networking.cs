@@ -241,7 +241,6 @@ namespace CatGame
 
             NetworkRunner runner = Instantiate(Global.Settings.RunnerPrefab);
             runner.name = peerName;
-
             peer.Runner = runner;
             peer.SceneManager = runner.GetComponent<NetworkSceneManager>();
             peer.LoadedScene = default;
@@ -380,7 +379,7 @@ namespace CatGame
             var scene = peer.SceneManager.GameplayScene;
             while (scene == null)
             {
-                Log($"Waiting for GameplayScene - Peer {peer.ID}");
+                Log($"esperando para GameplayScene - Peer {peer.ID}");
 
                 yield return null;
                 scene = peer.SceneManager.GameplayScene;

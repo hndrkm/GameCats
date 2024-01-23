@@ -41,6 +41,18 @@ namespace CatGame
             ActiveAgent = agent;
             _observedPlayer = Object.InputAuthority;
         }
+        public void DespawnAgent() 
+        {
+            if (Runner.IsServer == false)
+            {
+                return;
+            }
+            if (ActiveAgent != null && ActiveAgent.Object != null)
+            {
+                Runner.Despawn(ActiveAgent.Object);
+                ActiveAgent = null;
+            }
+        }
         public void UpdateStatistics(PlayerStatistics statistics)
         {
             Statistics = statistics;
@@ -51,9 +63,17 @@ namespace CatGame
             _observedPlayer = Object.InputAuthority;
             if (Object.HasInputAuthority == true)
             {
-                Context.LocalPlayerRef = _observedPlayer;
+                if (Context != null) 
+                {
+                    Context.LocalPlayerRef = _observedPlayer;
+                }
+                
             }
-            IsInitialized = true;
+            //IsInitialized = true;
+        }
+        public override void Despawned(NetworkRunner runner, bool hasState) 
+        {
+            DespawnAgent();
         }
         public override void FixedUpdateNetwork()
         {
@@ -68,10 +88,12 @@ namespace CatGame
             //    Context.ObservedPlayerRef = observedAgent != null ? observedAgent.Object.InputAuthority : Object.InputAuthority;
             //    Context.LocalPlayerRef = Object.InputAuthority;
             //}
-
-            if (IsInitialized == false && Object.HasInputAuthority == true && Runner.Stage == SimulationStages.Forward && Context.PlayerData != null)
+            if (Context != null)
             {
-                RPC_Initialize(Context.PeerUserID,Context.PlayerData.Nickname,Context.PlayerData.AgentPrefabID);
+                if (IsInitialized == false  && Object.HasInputAuthority == true && Runner.Stage == SimulationStages.Forward && Context.PlayerData != null)
+                {
+                    RPC_Initialize(Context.PeerUserID, Context.PlayerData.Nickname, Context.PlayerData.AgentPrefabID);
+                }
             }
         }
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -82,6 +104,7 @@ namespace CatGame
 #endif
             UserID = userID;
             Nickname = nickname;
+            AgentPrefabID = agentPrefabID;
             IsInitialized = true;
         }
     }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2094480950030733295}
   - component: {fileID: 4717718432826213596}
-  - component: {fileID: 4553432830805708207}
+  - component: {fileID: 8768041769986045018}
   m_Layer: 0
   m_Name: Gameplaymode
   m_TagString: Untagged
@@ -50,8 +50,8 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 4553432830805708207}
---- !u!114 &4553432830805708207
+  - {fileID: 8768041769986045018}
+--- !u!114 &8768041769986045018
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,8 +65,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameplayName: Versus
   MaxPlayers: 2
-  ScorePerKill: 10
-  ScorePerDeath: 0
-  TimeLimit: 300
+  ScorePerKill: 1
+  ScorePerDeath: -1
+  TimeLimit: 500
   _State: 0
   _type: 1

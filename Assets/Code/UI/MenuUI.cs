@@ -16,6 +16,8 @@ namespace CatGame
             base.OnInitialize();
 
             Debug.Log(Context.PlayerData.ToString());
+            Context.PlayerData.AgentID = Context.Settings.Agent.Agents[0].ID;
+            Debug.Log(Context.Settings.Agent.Agents[0].ID);
             if (Context.PlayerData.Nickname.HasValue() == false) 
             {
                 //Open modal de nickname

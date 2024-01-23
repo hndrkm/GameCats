@@ -49,13 +49,23 @@ namespace CatGame
         {
             get
             {
-                var Guid = NetworkProjectConfig.Global.PrefabTable.GetGuid(_agentPrefab.GetComponent<NetworkObject>().NetworkTypeId.AsPrefabId);
-                var id = NetworkProjectConfig.Global.PrefabTable.GetId(Guid);
-                if (_agentPrefabId.IsValid == false && id.IsValid == true)
+                if (_agentPrefabId.IsValid == false)
                 {
-                    _agentPrefabId = id;
-                }
+                    if (_agentPrefab.GetComponent<NetworkObject>().NetworkTypeId.IsValid == true)
+                    {
 
+                        var guui = NetworkProjectConfig.Global.PrefabTable.GetGuid(_agentPrefab.GetComponent<NetworkObject>().NetworkTypeId.AsPrefabId);
+                        Debug.Log(guui);
+                        var id = NetworkProjectConfig.Global.PrefabTable.GetId(guui);
+                        _agentPrefabId = id;
+                        
+                    }
+                    else
+                    {
+                        _agentPrefabId = NetworkPrefabId.FromRaw(1);
+                    }
+                    Debug.Log(_agentPrefabId);
+                }
                 return _agentPrefabId;
             }
         }

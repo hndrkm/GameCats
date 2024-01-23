@@ -56,7 +56,7 @@ namespace CatGame
             _gameplayMode.Activate();
             foreach (var playerRef in Runner.ActivePlayers)
             {
-               // SpawnPlayer(playerRef);
+               SpawnPlayer(playerRef);
             }
         }
         public Player GetPlayer(PlayerRef playerRef) 
@@ -110,6 +110,7 @@ namespace CatGame
 #if UNITY_EDITOR
                 player.gameObject.name = $"Player {player.Nickname}";
 #endif
+
                 _gameplayMode.PlayerJoined(player);
             }
             for (int i = 0; i < playersToRemove.Count; i++)

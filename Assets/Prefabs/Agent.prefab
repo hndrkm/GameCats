@@ -95,8 +95,11 @@ GameObject:
   - component: {fileID: 4079071792548778786}
   - component: {fileID: 3235480172868239307}
   - component: {fileID: 5471142265988532795}
+  - component: {fileID: -3098109669473792161}
+  - component: {fileID: 3186453380328805188}
   - component: {fileID: 6251103998166242243}
   - component: {fileID: 5819663838634090460}
+  - component: {fileID: 6507764089703476579}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -138,6 +141,8 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5471142265988532795}
+  - {fileID: -3098109669473792161}
+  - {fileID: 3186453380328805188}
   - {fileID: 5819663838634090460}
 --- !u!114 &5471142265988532795
 MonoBehaviour:
@@ -152,6 +157,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _visualRoot: {fileID: 3486495629595488137}
+--- !u!114 &-3098109669473792161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8878254136039088324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83fcd9061ae4759429b6be38580a8748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _reloadDruration: 1
+  _logMissingInputs: 0
+--- !u!114 &3186453380328805188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8878254136039088324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e91ccc4fa4e5434580aad5a9d65e630, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  acceleration: 10
+  braking: 10
+  maxSpeed: 2
+  rotationSpeed: 15
+  _Velocity: {x: 0, y: 0}
 --- !u!114 &6251103998166242243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,3 +222,38 @@ MonoBehaviour:
   _maxHealthFromRegen: 0
   _regenTickPerSecond: 0
   _regenCombatDelay: 0
+--- !u!58 &6507764089703476579
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8878254136039088324}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
