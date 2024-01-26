@@ -3,7 +3,6 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 namespace CatGame
 {

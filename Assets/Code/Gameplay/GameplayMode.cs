@@ -5,6 +5,8 @@ namespace CatGame
 
     using System.Collections.Generic;
     using UnityEngine;
+    using UnityEngine.UIElements;
+
     public struct KillData : INetworkStruct
     {
         public PlayerRef KillerRef;
@@ -70,8 +72,9 @@ namespace CatGame
             {
                 _endTimer = TickTimer.CreateFromSeconds(Runner, TimeLimit);
             }
-            Runner.SimulationUnityScene.GetComponents(_allSpawnPoints);
 
+            Runner.SimulationUnityScene.GetComponents(_allSpawnPoints);
+            Debug.Log(_allSpawnPoints.Count);
             for (int i = 0; i < _allSpawnPoints.Count; i++)
             {
                 if (_allSpawnPoints[i].SpawnEnabled == true)
@@ -92,6 +95,7 @@ namespace CatGame
         }
         public Transform GetRandomSpawnPoint(float minDistanceFromAgents)
         {
+            Debug.Log(_availableSpawnPoints.SafeCount());
             if (_availableSpawnPoints.SafeCount() == 0)
                 return null;
 
@@ -171,13 +175,21 @@ namespace CatGame
         }
         public override void Spawned()
         {
-            //Context.GameplayMode = this;
+            Runner.SimulationUnityScene.GetComponents(_allSpawnPoints);
+            Debug.Log(_allSpawnPoints.Count);
+            for (int i = 0; i < _allSpawnPoints.Count; i++)
+            {
+                if (_allSpawnPoints[i].SpawnEnabled == true)
+                {
+                    _availableSpawnPoints.Add(_allSpawnPoints[i]);
+                }
+            }
         }
         protected virtual void OnActivate() { }
         protected virtual void TrySpawnAgent(Player player)
         {
             Transform spawnPoint = GetRandomSpawnPoint(100.0f);
-
+            
             var spawnPosition = spawnPoint != null ? spawnPoint.position : Vector3.zero;
             var spawnRotation = spawnPoint != null ? spawnPoint.rotation : Quaternion.identity;
 
@@ -190,7 +202,7 @@ namespace CatGame
         protected Agent SpawnAgent(PlayerRef playerRef, Vector3 position, Quaternion rotation)
         {
             var player = Context.NetworkGame.GetPlayer(playerRef);
-            Debug.Log(player.AgentPrefabID);
+            
             if (player.AgentPrefabID.IsValid == false)
             {
                 Debug.Log("error prefab");

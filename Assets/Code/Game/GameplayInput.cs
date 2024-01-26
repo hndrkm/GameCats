@@ -16,9 +16,9 @@ namespace CatGame
         public struct GameplayInput : INetworkInput
         {
             public Vector2 MoveDirection;
-            public Vector2 LookRotationDelta;
+            public Vector2 AimLocation;
             public NetworkButtons Actions;
-            public byte Weapon;
+            public byte Spell;
 
             public bool Power { get { return Actions.IsSet(EGameplayInputAction.Power); } set { Actions.Set(EGameplayInputAction.Power, value); } }
             public bool Aim { get { return Actions.IsSet(EGameplayInputAction.Aim); } set { Actions.Set(EGameplayInputAction.Aim, value); } }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 namespace CatGame
 {
@@ -250,7 +249,6 @@ namespace CatGame
 
             foreach (var service in services)
             {
-                Debug.Log($"{service.ToString()}....................................");
                 AddService(service);
             }
         }

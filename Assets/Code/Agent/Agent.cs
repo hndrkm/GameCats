@@ -15,12 +15,14 @@ namespace CatGame
 
         public AgentInput AgentInput => _agentInput;
         public Character Character => _character;
+        public Spells Spells => _spells;
         public Health Health => _health;
         [SerializeField]
         private GameObject _visualRoot;
 
         private AgentInput _agentInput;
         private Character _character;
+        private Spells _spells;
         private Health _health;
 
         public override void Spawned()
@@ -29,11 +31,15 @@ namespace CatGame
 
             _visualRoot.SetActive(true);
             _character.OnSpawned(this);
+            _spells.OnSpawned();
             _health.OnSpawned(this);
         }
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
-
+            if (_spells != null)
+            {
+                
+            }
             if (_health != null)
             {
                 _health.OnDespawned();
@@ -50,6 +56,7 @@ namespace CatGame
         {
             _agentInput = GetComponent<AgentInput>();
             _character = GetComponent<Character>();
+            _spells = GetComponent<Spells>();
             _health = GetComponent<Health>();
 
             
@@ -74,6 +81,13 @@ namespace CatGame
             
             _health.OnFixedUpdate();
 
+            if (_health.IsAlive == true && Object.IsProxy == false ) 
+            {
+                bool attackWasActivated = _agentInput.WasActivated(EGameplayInputAction.Attack);
+                //Debug.Log($"{attackWasActivated} ----- {_agentInput.FixedInput.Attack}");
+                TryCast(attackWasActivated,_agentInput.FixedInput.Attack);
+            }
+
             if (Object.IsProxy == false)
             {
                 _agentInput.SetLastKnownInput(_agentInput.FixedInput, true);
@@ -92,11 +106,18 @@ namespace CatGame
 
             if (_health.IsAlive == true)
             {
+                var cachedInput = _agentInput.CachedInput;
                 input = _agentInput.RenderInput;
+                input.Aim = cachedInput.Aim;
+                input.AimLocation = cachedInput.AimLocation;
+
+            }
+            if (input.Aim == true)
+            {
+                Debug.Log(_agentInput.RenderInput.AimLocation);
+                input.Aim &= CanAin();
             }
             cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
-
-            
 
         }
         private void ProcessFixedInput()
@@ -106,16 +127,34 @@ namespace CatGame
 
             CharacterMoveController cmc = _character.CMC;
 
-
             GameplayInput input = default;
 
             if (_health.IsAlive == true)
             {
                 input = _agentInput.FixedInput;
             }
+            if (input.Aim == true)
+            {
+                input.Aim &= CanAin();
+            }
             cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
 
             _agentInput.SetFixedInput(input, false);
         }
+        private void TryCast(bool attack,bool hold) 
+        {
+            if (hold == false)
+                return;
+            if (_spells.CanCastSpell(attack,0))
+                return;
+            
+            if (_spells.Cast(0))
+                Debug.Log("Casteo"); 
+        }
+        private bool CanAin() 
+        {
+            return _spells.CanAim(0);
+        }
+
     }
 }

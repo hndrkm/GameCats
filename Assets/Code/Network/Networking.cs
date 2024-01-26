@@ -9,9 +9,7 @@ using UnityEngine.EventSystems;
 
 using UnityEngine.SceneManagement;
 using Fusion;
-
 using Fusion.Sockets;
-
 using UnityScene = UnityEngine.SceneManagement.Scene;
 using static System.Collections.Specialized.BitVector32;
 
@@ -64,12 +62,9 @@ namespace CatGame
                 Debug.LogError("No se puede comenzar con varios Peers. PeerMode esta configurado en unico.");
                 request.ExtraPeers = 0;
             }
-            Debug.Log(request.ScenePath);
             SceneRef sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath(request.ScenePath));
-
             int totalPeers = 1 + request.ExtraPeers;
             session.GamePeers = new GamePeer[totalPeers];
-
             for (int i = 0; i < totalPeers; i++)
             {
                 session.GamePeers[i] = new GamePeer(i)
@@ -80,14 +75,10 @@ namespace CatGame
                     Request = request,
                 };
             }
-
             session.ConnectionRequested = true;
-
             _pendingSession = session;
             _stopGameOnDisconnect = false;
-
             ErrorStatus = null;
-
             Log($"StartGame() UserID:{request.UserID} GameMode:{request.GameMode} DisplayName:{request.DisplayName} SessionName:{request.SessionName} ScenePath:{request.ScenePath} GameplayType:{request.GameplayType} MaxPlayers:{request.MaxPlayers} ExtraPeers:{request.ExtraPeers} CustomLobby:{request.CustomLobby}");
         }
         public void StopGame(string errorStatus = null)
@@ -128,7 +119,6 @@ namespace CatGame
                     _currentSession.ConnectionRequested = false;
                 }
             }
-
             UpdateCurrentSession();
             if (_coroutine == null && _currentSession != null && _currentSession.IsConnected == false)
             {
@@ -304,9 +294,7 @@ namespace CatGame
                 Debug.LogError($"{peerName}Error al iniciar Result: {result}");
 
                 if (Application.isBatchMode == false)
-                {
                     StopGame();
-                }
 
                 if (peer.WasConnected == true && result.ShutdownReason == ShutdownReason.GameNotFound)
                 {
@@ -629,7 +617,6 @@ namespace CatGame
                 while (loadingSceneObject.IsFading == true)
                     yield return null;
             }
-            Debug.Log("se o");
             if (show == true && additionalTime > 0f)
             {
                 // Espere un tiempo que aparezca gradualmente

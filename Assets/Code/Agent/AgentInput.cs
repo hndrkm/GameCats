@@ -196,17 +196,17 @@ namespace CatGame
             
 
             Vector2 moveDirection;
-            Vector2 lookRotationDelta;
+            Vector2 aimLocation;
 
 
-                Mouse mouse = Mouse.current;
-                Keyboard keyboard = Keyboard.current;
-            Joystick joystick = null;
-                Vector2 mouseDelta = mouse.delta.ReadValue() * 0.075f;
+            Mouse mouse = Mouse.current;
+            Keyboard keyboard = Keyboard.current;
+            Vector2 mousePosition = mouse.position.ReadValue();
 
-                moveDirection = Vector2.zero;
+            moveDirection = Vector2.zero;
+
+            aimLocation = mousePosition;
                 
-
                 
 
                 if (keyboard.wKey.isPressed == true) { moveDirection += Vector2.up; }
@@ -219,15 +219,16 @@ namespace CatGame
                     moveDirection.Normalize();
                 }
 
-                _renderInput.MoveDirection = moveDirection;
-                _renderInput.Aim = mouse.rightButton.isPressed;
-                _renderInput.Attack = mouse.leftButton.isPressed;
-                _renderInput.Reload = keyboard.rKey.isPressed;
-                _renderInput.Interact = keyboard.fKey.isPressed;
+            _renderInput.MoveDirection = moveDirection;
+            _renderInput.AimLocation = aimLocation;
+            _renderInput.Aim = mouse.leftButton.isPressed;
+            _renderInput.Attack = mouse.leftButton.wasReleasedThisFrame;
+            _renderInput.Reload = keyboard.rKey.isPressed;
+            _renderInput.Interact = keyboard.fKey.isPressed;
 #if UNITY_EDITOR
-                _renderInput.ToggleSpeed = keyboard.backquoteKey.isPressed;
+            _renderInput.ToggleSpeed = keyboard.backquoteKey.isPressed;
 #else
-				_renderInput.ToggleSpeed       = keyboard.leftCtrlKey.isPressed & keyboard.leftAltKey.isPressed & keyboard.backquoteKey.isPressed;
+			_renderInput.ToggleSpeed       = keyboard.leftCtrlKey.isPressed & keyboard.leftAltKey.isPressed & keyboard.backquoteKey.isPressed;
 #endif
 
             float deltaTime = Time.deltaTime;
@@ -236,9 +237,7 @@ namespace CatGame
 
             _cachedInput.Actions = new NetworkButtons(_cachedInput.Actions.Bits | _renderInput.Actions.Bits);
             _cachedInput.MoveDirection = _cachedMoveDirection / _cachedMoveDirectionSize;
-            _cachedInput.LookRotationDelta += _renderInput.LookRotationDelta;
-
-            
+            _cachedInput.AimLocation = _renderInput.AimLocation;
         }
         void IBeforeTick.BeforeTick()
         {
@@ -275,11 +274,11 @@ namespace CatGame
 
                         if (_missingInputsInRow > 5)
                         {
-                            _fixedInput.LookRotationDelta = default;
+                            _fixedInput.AimLocation = default;
                         }
                         else if (_missingInputsInRow > 2)
                         {
-                            _fixedInput.LookRotationDelta *= 0.5f;
+                            _fixedInput.AimLocation *= 0.5f;
                         }
 
                         if (_logMissingInputs == true && Runner.Tick >= _logMissingInputFromTick)
@@ -324,12 +323,12 @@ namespace CatGame
             // If there's a spike, OnInput() and FixedUpdateNetwork() will be called multiple times in a row without BeforeUpdate() in between, so we don't reset move direction to preserve movement.
             // Instead, move direction and other sensitive properties are reset in next BeforeUpdate() - driven by _resetCachedInput.
 
-            _cachedInput.LookRotationDelta = default;
+            //_cachedInput.AimLocation = default;
 
             // Input consumed by OnInput() call will be read in FixedUpdateNetwork() and immediately propagated to KCC.
             // Here we should reset render properties so they are not applied twice (fixed + render update).
 
-            _renderInput.LookRotationDelta = default;
+            //_renderInput.AimLocation = default;
 
             networkInput.Set(gameplayInput);
         }

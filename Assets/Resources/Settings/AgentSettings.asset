@@ -19,3 +19,9 @@ MonoBehaviour:
     _icon: {fileID: 0}
     _agentPrefab: {fileID: 8878254136039088324, guid: 245197e9af541c1428bce76b11455cee, type: 3}
     _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}
+  - _id: Agent.Cat1
+    _displayName: Cat1
+    _description: gato
+    _icon: {fileID: 0}
+    _agentPrefab: {fileID: 8878254136039088324, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+    _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}

@@ -82,11 +82,7 @@ namespace CatGame
                 return;
 
             _activationScene = null;
-
-            Log($"Empezae a cargar la escena");
-
             _loadingInstance = _instanceID;
-            //_loadingCoroutine = StartCoroutine(SwitchSceneCoroutine(_runner, _currentScene, SceneRef.FromIndex(_runner.SimulationUnityScene.buildIndex)));
         }
 
         protected override IEnumerator OnSceneLoaded(SceneRef sceneRef, UnityScene scene, NetworkLoadSceneParameters sceneParams)
