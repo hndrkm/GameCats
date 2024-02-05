@@ -227,7 +227,7 @@ namespace CatGame
 
             yield return null;
 
-            NetworkObjectProviderDefault pool = new NetworkObjectProviderDefault();
+            NetworkObjectPool pool = new NetworkObjectPool();
 
             NetworkRunner runner = Instantiate(Global.Settings.RunnerPrefab);
             runner.name = peerName;
@@ -394,7 +394,7 @@ namespace CatGame
             sceneContext.PeerUserID = peer.UserID;
 
             peer.Context = sceneContext;
-            //pool.Context = sceneContext;
+            pool.Context = sceneContext;
 
             StatusDescription = "Esperando juego en red";
 

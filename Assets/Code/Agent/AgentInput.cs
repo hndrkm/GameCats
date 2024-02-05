@@ -31,6 +31,7 @@ namespace CatGame
         private GameplayInput _baseFixedInput;
         private GameplayInput _baseRenderInput;
         private Vector2 _cachedMoveDirection;
+        private Vector2 _cachedAimDirection;
         private float _cachedMoveDirectionSize;
         private bool _resetCachedInput;
         private int _missingInputsTotal;
@@ -196,20 +197,22 @@ namespace CatGame
             
 
             Vector2 moveDirection;
-            Vector2 aimLocation;
+            Vector2 aimLocation = Vector2.zero;
 
 
             Mouse mouse = Mouse.current;
             Keyboard keyboard = Keyboard.current;
-            Vector2 mousePosition = mouse.position.ReadValue();
+            Vector2 mousePosition = mouse.delta.ReadValue()*0.05f;
 
             moveDirection = Vector2.zero;
+            if (mouse.leftButton.isPressed)
+            {
+                aimLocation = mousePosition*Global.RuntimeSettings.AimSensitivity;
+                _cachedAimDirection += aimLocation;
+            }
 
-            aimLocation = mousePosition;
-                
-                
 
-                if (keyboard.wKey.isPressed == true) { moveDirection += Vector2.up; }
+            if (keyboard.wKey.isPressed == true) { moveDirection += Vector2.up; }
                 if (keyboard.sKey.isPressed == true) { moveDirection += Vector2.down; }
                 if (keyboard.aKey.isPressed == true) { moveDirection += Vector2.left; }
                 if (keyboard.dKey.isPressed == true) { moveDirection += Vector2.right; }
@@ -218,9 +221,10 @@ namespace CatGame
                 {
                     moveDirection.Normalize();
                 }
-
+           
+            
             _renderInput.MoveDirection = moveDirection;
-            _renderInput.AimLocation = aimLocation;
+            _renderInput.AimLocation = _cachedAimDirection;
             _renderInput.Aim = mouse.leftButton.isPressed;
             _renderInput.Attack = mouse.leftButton.wasReleasedThisFrame;
             _renderInput.Reload = keyboard.rKey.isPressed;
@@ -230,7 +234,11 @@ namespace CatGame
 #else
 			_renderInput.ToggleSpeed       = keyboard.leftCtrlKey.isPressed & keyboard.leftAltKey.isPressed & keyboard.backquoteKey.isPressed;
 #endif
-
+            if (mouse.leftButton.wasReleasedThisFrame)
+            {
+                _cachedAimDirection = default;
+            }
+            
             float deltaTime = Time.deltaTime;
             _cachedMoveDirection += moveDirection * deltaTime;
             _cachedMoveDirectionSize += deltaTime;

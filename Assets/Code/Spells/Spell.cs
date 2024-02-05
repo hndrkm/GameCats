@@ -53,7 +53,12 @@ namespace CatGame
         public virtual bool CanAinm() { return false; }
         public virtual bool HasEnergy() { return true; }
         public virtual bool AddEnergy(int energy) { return false; }
-
+        public void SetParent(Transform parentTrasform) 
+        {
+            transform.SetParent(parentTrasform,false);
+            transform.localPosition = Vector2.zero;
+            transform.localRotation = Quaternion.identity;
+        }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {

@@ -1,19 +1,30 @@
 using Fusion;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace CatGame
 {
-    public class Spells : NetworkBehaviour
+    [Serializable]
+    public class SpellSlot 
+    {
+        public Transform Active;
+        public Transform Inactive;
+
+    }
+    public class Spells : NetworkBehaviour,IBeforeTick
     {
         [SerializeField]
         private Spell[] _initialSpells;
+        [SerializeField]
+        private SpellSlot[] _slots;
         [SerializeField]
         private LayerMask _hitMask;
         [Networked]
         private NetworkArray<Spell> _spells { get; }
 
+        private bool _spellsRefresh;
         private Agent _agent;
         public void OnSpawned() 
         {
@@ -29,6 +40,7 @@ namespace CatGame
                 AddSpell(spell);
                 if (bestSpellSlot == 0)
                     bestSpellSlot = spell.SpellSlot;
+                _spellsRefresh = true;
             }
         }
         public bool CanCastSpell(bool keyDown, int slot) 
@@ -78,9 +90,29 @@ namespace CatGame
             return energyAdded;
 
         }
+        void IBeforeTick.BeforeTick() 
+        {
+            RefreshSpells();
+        }
         protected void Awake()
         {
             _agent = GetComponent<Agent>();
+        }
+
+        private void RefreshSpells() 
+        {
+            if (_spellsRefresh == false)
+            {
+                return;
+            }
+            for (int i = 0; i < _spells.Length; i++)
+            {
+                if (_spells[i] == null)
+                {
+                    continue;
+                }
+                _spells[i].SetParent(_slots[i].Active);
+            }
         }
         private void PickupSpell(Spell spell) 
         {
@@ -91,7 +123,9 @@ namespace CatGame
         private Vector2 GetTargetPoint() 
         {
             var target = _agent.AgentInput.CachedInput.AimLocation;
-            return target/1000;
+            target += new Vector2(transform.position.x,transform.position.y);
+            Debug.Log(target);
+            return target;
         }
         private void AddSpell(Spell spell) 
         {

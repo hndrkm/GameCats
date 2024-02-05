@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -19,16 +20,18 @@ namespace CatGame
         public Health Health => _health;
         [SerializeField]
         private GameObject _visualRoot;
+        [SerializeField]
+        private TextMeshPro _textNickname;
 
         private AgentInput _agentInput;
         private Character _character;
         private Spells _spells;
         private Health _health;
-
+        
         public override void Spawned()
         {
-            name = Object.InputAuthority.ToString();    
-
+            name = Object.InputAuthority.ToString();
+            _textNickname.text=Context.NetworkGame.GetPlayer(Object.InputAuthority).Nickname;
             _visualRoot.SetActive(true);
             _character.OnSpawned(this);
             _spells.OnSpawned();
@@ -114,7 +117,6 @@ namespace CatGame
             }
             if (input.Aim == true)
             {
-                Debug.Log(_agentInput.RenderInput.AimLocation);
                 input.Aim &= CanAin();
             }
             cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);

@@ -13,7 +13,7 @@ namespace CatGame
         public float Cooldown => _cooldown.ExpiredOrNotRunning(Runner) == false ? _cooldown.RemainingTime(Runner).Value : 0;
 
         [SerializeField]
-        private GameObject _areaSpell;
+        private EffectArea _areaSpell;
         [SerializeField]
         private float _areaEffect = 2f;
         [SerializeField]
@@ -49,6 +49,11 @@ namespace CatGame
             {
                 //if(Object.LastReceiveTick < Runner.Tick - 2.0f * Runner.TickRate)
                 return;
+            }
+            int? cooldownTargetTick = _cooldown.TargetTick;
+            if (cooldownTargetTick.HasValue == true && cooldownTargetTick.Value <= Runner.Tick)
+            {
+                IsCasting = false;
             }
 
         }
@@ -104,6 +109,9 @@ namespace CatGame
             var area = Runner.Spawn(_areaSpell, areaPosition,Quaternion.identity,Object.InputAuthority,BeforeAreaSpawned);
             if (area == null)
                 return true;
+            area.AutoCast(Owner,areaPosition,areaEffect,hitMask,HitType);
+            float castTime = (Runner.Tick) * Runner.DeltaTime;
+            area.SetDespawnCooldown(_areaDespawnTime);
 
             void BeforeAreaSpawned(NetworkRunner runner,NetworkObject spawnedObject) 
             {

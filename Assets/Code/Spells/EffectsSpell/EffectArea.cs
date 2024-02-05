@@ -16,7 +16,6 @@ namespace CatGame
 
         [SerializeField]
         private GameObject _areaVisual;
-
         private AreaData _aData { get; set; }
         
         private EHitType _hitType;
@@ -53,7 +52,7 @@ namespace CatGame
         }
         public override void FixedUpdateNetwork()
         {
-            if (IsProxy == true)
+            if (IsProxy == false)
             {
                 var data = _aData;
                 CalculateArea(ref data);
