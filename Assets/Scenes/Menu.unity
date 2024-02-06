@@ -336,7 +336,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!225 &43297532
 CanvasGroup:
@@ -2515,7 +2515,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!225 &325195562
 CanvasGroup:
@@ -3044,8 +3044,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _defaultViews:
   - {fileID: 1748585028}
-  _errorTxt: {fileID: 0}
-  _panelError: {fileID: 0}
 --- !u!114 &416613552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5432,7 +5430,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!225 &1020874375
 CanvasGroup:
