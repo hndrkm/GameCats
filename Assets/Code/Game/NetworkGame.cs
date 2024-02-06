@@ -31,7 +31,7 @@ namespace CatGame
             if (Object.HasStateAuthority==true) 
             {
                 var prefab = _modePrefabs.Find(t=>t.Type == gameplayType);
-                _gameplayMode = Runner.Spawn(prefab,onBeforeSpawned:OnSpawGamePlayMode);
+                _gameplayMode = Runner.Spawn(prefab);
             }
             _localPlayer = Runner.LocalPlayer;
             _fusionCallbacks.DisconnectedFromServer -= OnDisconnectedFromServer;

@@ -6,6 +6,7 @@ namespace CatGame
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UIElements;
+    using static Cinemachine.CinemachineTriggerAction.ActionSettings;
 
     public struct KillData : INetworkStruct
     {
@@ -175,6 +176,8 @@ namespace CatGame
         }
         public override void Spawned()
         {
+            //this.GetComponent<GameplayMode>().Context = Context;
+            Context.GameplayMode = this;
             Runner.SimulationUnityScene.GetComponents(_allSpawnPoints);
             Debug.Log(_allSpawnPoints.Count);
             for (int i = 0; i < _allSpawnPoints.Count; i++)
