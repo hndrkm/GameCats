@@ -124,7 +124,7 @@ namespace CatGame.UI
         protected virtual void OnOpen() { }
         protected virtual void OnClose() { }
         protected virtual void OnInitialize() { }
-        protected void OnDeinitialize() 
+        protected virtual void OnDeinitialize() 
         {
             Close_Internal();
             HasOpened = null; 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace CatGame
+namespace CatGame.UI
 {
-    public class MenuUI : BaseService
+    public class MenuUI : BaseUI
     {
         [SerializeField]
         private TextMeshProUGUI _errorTxt;
