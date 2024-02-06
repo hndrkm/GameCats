@@ -81,8 +81,9 @@ namespace CatGame.UI
         }
         private void OnJoinButton() 
         {
-            if (CanJoinSession(_selectSession))
+            if (CanJoinSession(_selectSession)==false)
                 return;
+            
             Context.Matchmaking.JoinSession(_selectSession);
         }
         private bool CanJoinSession(SessionInfo session) 
