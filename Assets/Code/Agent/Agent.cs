@@ -87,8 +87,10 @@ namespace CatGame
             if (_health.IsAlive == true && Object.IsProxy == false ) 
             {
                 bool attackWasActivated = _agentInput.WasActivated(EGameplayInputAction.Attack);
+                bool powerWasActivated = _agentInput.WasActivated(EGameplayInputAction.Power);
                 //Debug.Log($"{attackWasActivated} ----- {_agentInput.FixedInput.Attack}");
                 TryCast(attackWasActivated,_agentInput.FixedInput.Attack);
+                TryPower(powerWasActivated, _agentInput.FixedInput.Power);
             }
 
             if (Object.IsProxy == false)
@@ -142,6 +144,16 @@ namespace CatGame
             cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
 
             _agentInput.SetFixedInput(input, false);
+        }
+        private void TryPower(bool cast,bool hold) 
+        {
+            if (hold == false)
+                return;
+            if (_spells.CanCastSpell(cast, 1))
+                return;
+
+            if (_spells.Cast(1))
+                Debug.Log("CasteoPower");
         }
         private void TryCast(bool attack,bool hold) 
         {

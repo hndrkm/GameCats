@@ -525,7 +525,7 @@ MonoBehaviour:
     Inactive: {fileID: 3025888448308886334}
   _hitMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
 --- !u!114 &5819663838634090460
 MonoBehaviour:
   m_ObjectHideFlags: 0

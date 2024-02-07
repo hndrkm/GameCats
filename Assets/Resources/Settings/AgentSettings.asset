@@ -17,11 +17,13 @@ MonoBehaviour:
     _displayName: Cat1
     _description: gato
     _icon: {fileID: 0}
+    _agentPrefabIndex: 2
     _agentPrefab: {fileID: 2358926105992775402, guid: 1a976c41161157d4085138a39c8ad3eb, type: 3}
     _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}
   - _id: Agent.Cat2
     _displayName: Cat2
     _description: gato
     _icon: {fileID: 0}
+    _agentPrefabIndex: 3
     _agentPrefab: {fileID: 2358926105992775402, guid: 1aed4c924c253644e809d789c0a83272, type: 3}
     _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}

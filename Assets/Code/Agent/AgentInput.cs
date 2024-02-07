@@ -216,8 +216,8 @@ namespace CatGame
                 if (keyboard.sKey.isPressed == true) { moveDirection += Vector2.down; }
                 if (keyboard.aKey.isPressed == true) { moveDirection += Vector2.left; }
                 if (keyboard.dKey.isPressed == true) { moveDirection += Vector2.right; }
-
-                if (moveDirection.x ==0 && moveDirection.y ==0)
+            
+            if (moveDirection.x ==0 && moveDirection.y ==0)
                 {
                     moveDirection.Normalize();
                 }
@@ -227,6 +227,7 @@ namespace CatGame
             _renderInput.AimLocation = _cachedAimDirection;
             _renderInput.Aim = mouse.leftButton.isPressed;
             _renderInput.Attack = mouse.leftButton.wasReleasedThisFrame;
+            _renderInput.Power = keyboard.eKey.isPressed;
             _renderInput.Reload = keyboard.rKey.isPressed;
             _renderInput.Interact = keyboard.fKey.isPressed;
 #if UNITY_EDITOR

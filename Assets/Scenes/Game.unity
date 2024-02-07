@@ -452,14 +452,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3728076749855911838}
     m_Modifications:
-    - target: {fileID: 5391063223437678609, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
-      propertyPath: _modePrefabs.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5391063223437678609, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
-      propertyPath: _modePrefabs.Array.data[0]
-      value: 
-      objectReference: {fileID: 8768041769986045018, guid: 27c5ad47804dcdb4ebaea8b2d210774a, type: 3}
     - target: {fileID: 6405369572877124209, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
       propertyPath: m_Name
       value: NetworkGame

@@ -42,6 +42,7 @@ namespace CatGame
         public string DisplayName => _displayName;
         public string Description => _description;
         public Sprite Icon => _icon;
+        public int AgentPrefabIndex => _agentPrefabIndex;
         public GameObject AgentPrefab => _agentPrefab;
         public GameObject MenuAgentPrefab => _menuAgentPrefab;
 
@@ -62,7 +63,7 @@ namespace CatGame
                     }
                     else
                     {
-                        _agentPrefabId = NetworkPrefabId.FromRaw(1);
+                        _agentPrefabId = NetworkPrefabId.FromRaw((uint)_agentPrefabIndex);
                     }
                     Debug.Log(_agentPrefabId);
                 }
@@ -78,6 +79,8 @@ namespace CatGame
         private string _description;
         [SerializeField]
         private Sprite _icon;
+        [SerializeField]
+        private int _agentPrefabIndex;
         [SerializeField]
         private GameObject _agentPrefab;
         [SerializeField]

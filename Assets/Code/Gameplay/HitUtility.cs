@@ -29,6 +29,7 @@ namespace CatGame
         None, 
         Fire,
         Ice,
+        Buff,
         Heal, 
         Energy,
     }

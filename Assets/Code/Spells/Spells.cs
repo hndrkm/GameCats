@@ -21,13 +21,14 @@ namespace CatGame
         private SpellSlot[] _slots;
         [SerializeField]
         private LayerMask _hitMask;
-        [Networked]
+        [Networked,Capacity(8)]
         private NetworkArray<Spell> _spells { get; }
 
         private bool _spellsRefresh;
         private Agent _agent;
         public void OnSpawned() 
         {
+            
             if (Object.HasInputAuthority == false)
             { return; }
             int bestSpellSlot = 0;
@@ -138,7 +139,9 @@ namespace CatGame
         }
         private void RemoveSpell(int slot) 
         {
-            var spell = _spells[slot];
+            if (slot >= _spells.Length)
+                return;
+            var spell = _spells.Get(slot);
             if (spell == null)
                 return;
             if (spell.Owner != null)

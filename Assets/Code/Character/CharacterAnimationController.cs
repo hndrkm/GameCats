@@ -6,16 +6,17 @@ namespace CatGame
 {
     public class CharacterAnimationController : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
+        Agent agent;
+        [SerializeField]
+        Animator animator;
+        private void Awake()
         {
-        
+            //animator = tryGetComponent<Animator>();
+            agent = GetComponent<Agent>();
         }
-
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-        
+            animator.SetFloat("vel",agent.Character.CMC.Velocity.magnitude);
         }
     }
 }
