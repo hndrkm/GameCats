@@ -25,6 +25,8 @@ namespace CatGame
                 result = "item invalido";
                 return false;
             }
+            result = "";
+            return true;
         }
     }
 }
