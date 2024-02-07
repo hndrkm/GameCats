@@ -120,14 +120,16 @@ namespace CatGame
             ListPool.Return(playersToRemove);
         }
 
-        public void PlayerJoined(PlayerRef playerRef)
+        void IPlayerJoined.PlayerJoined(PlayerRef playerRef)
         {
-            if (Runner.IsServer == false) return;
-            if (_isActive) return;
+            if (Runner.IsServer == false) 
+                return;
+            if (_isActive) 
+                return;
             SpawnPlayer(playerRef);
         }
 
-        public void PlayerLeft(PlayerRef playerRef)
+        void IPlayerLeft.PlayerLeft(PlayerRef playerRef)
         {
             if (playerRef.IsRealPlayer == false) return;
             if (Runner.IsServer ==false) return;

@@ -463,6 +463,7 @@ namespace CatGame
 
             Log($"NetworkGame.Activate() - Peer {peer.ID}");
             networkGame.Activate();
+            Debug.Log(networkGame.Context == null);
 
             if (SceneManager.GetSceneByName(_loadingScene).IsValid() == true)
             {

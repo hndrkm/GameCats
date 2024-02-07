@@ -177,7 +177,7 @@ namespace CatGame
         public override void Spawned()
         {
             //this.GetComponent<GameplayMode>().Context = Context;
-            Context.GameplayMode = this;
+            Context.GameplayMode = GetComponent<GameplayMode>();
             Runner.SimulationUnityScene.GetComponents(_allSpawnPoints);
             Debug.Log(_allSpawnPoints.Count);
             for (int i = 0; i < _allSpawnPoints.Count; i++)
