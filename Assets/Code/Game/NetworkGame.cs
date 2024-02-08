@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using System;
 using Unity.VisualScripting;
+using static Cinemachine.CinemachineTriggerAction.ActionSettings;
 
 namespace CatGame
 {
@@ -39,7 +40,14 @@ namespace CatGame
             Runner.RemoveCallbacks(_fusionCallbacks);
             Runner.AddCallbacks(_fusionCallbacks);
             ActivePlayerCount = 0;
-
+        }
+        public void AsingContext() 
+        {
+            if (_gameplayMode == null)
+            {
+                return;
+            }
+            _gameplayMode.GetComponent<GameplayMode>().Context = Context;
         }
         private void OnSpawGamePlayMode(NetworkRunner runner,NetworkObject gameMode) 
         {

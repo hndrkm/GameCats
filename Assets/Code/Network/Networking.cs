@@ -436,7 +436,7 @@ namespace CatGame
             while (scene.Context.GameplayMode == null)
             {
                 Log($"Esperando GameplayMode - Peer {peer.ID}");
-
+                //networkGame.AsingContext();
                 yield return null;
 
                 if (Time.realtimeSinceStartup >= limitTime)

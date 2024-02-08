@@ -114,8 +114,10 @@ namespace CatGame
             var contextBehaviours = scene.GetComponents<IContextBehaviour>(true);
             foreach (var behaviurs in contextBehaviours)
             {
+                
                 behaviurs.Context = _gameplayScene.Context;
             }
+            //_runner.RegisterSceneObjects
         }
         private void Log(string message)
         {

@@ -14,7 +14,7 @@ namespace CatGame
         [HideInInspector]
         public PlayerData PlayerData;
 
-        public MenuUI UI;
+        public BaseUI UI;
 
         public NetworkGame NetworkGame;
 
