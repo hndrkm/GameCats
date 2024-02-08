@@ -10,7 +10,6 @@ namespace CatGame
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.SceneManagement;
-
     using UnityScene = UnityEngine.SceneManagement.Scene;
 
     public class NetworkSceneManager : NetworkSceneManagerDefault { 
@@ -73,26 +72,20 @@ namespace CatGame
         }
         private void LateUpdate()
         {
-            if (_runner == null)
-                return;
-            if (_loadingCoroutine != null)
-                return;
-            if (_currentScene.AsIndex == _runner.SimulationUnityScene.buildIndex)
-                return;
-            if (Time.realtimeSinceStartup < _activationTimeout && _activationScene != null && _activationScene.IsActive == false)
-                return;
 
-            _activationScene = null;
-            _loadingInstance = _instanceID;
         }
         protected override IEnumerator LoadSceneCoroutine(SceneRef sceneRef, NetworkLoadSceneParameters sceneParams)
         {
+            Debug.Log($"cargando la Scena {sceneRef}");
             yield return base.LoadSceneCoroutine(sceneRef, sceneParams);
+        }
+        protected override IEnumerator OnSceneLoaded(SceneRef sceneRef, UnityScene scene, NetworkLoadSceneParameters sceneParams)
+        {
             _currentScene = sceneRef;
-            _gameplayScene = _runner.SimulationUnityScene.GetComponent<Base>(true);
+            _gameplayScene = scene.GetComponent<Base>(true);
             _activationScene = _gameplayScene;
             _activationTimeout = Time.realtimeSinceStartup + 10.0f;
-
+            Debug.Log($"cargo la Scena {scene.name}");
             float contextTimeout = 20.0f;
 
             while (_gameplayScene.ContextReady == false && contextTimeout > 0.0f)
@@ -111,15 +104,12 @@ namespace CatGame
                 //FinishSceneLoading();
                 yield break;
             }
-            var contextBehaviours = _runner.SimulationUnityScene.GetComponents<IContextBehaviour>(true);
+            var contextBehaviours = scene.GetComponents<IContextBehaviour>(true);
             foreach (var behaviurs in contextBehaviours)
             {
-                Debug.Log($"//////////////////////////////{behaviurs}");
+
                 behaviurs.Context = _gameplayScene.Context;
             }
-        }
-        protected override IEnumerator OnSceneLoaded(SceneRef sceneRef, UnityScene scene, NetworkLoadSceneParameters sceneParams)
-        {
             yield return base.OnSceneLoaded(sceneRef, scene, sceneParams);
             
             //_runner.RegisterSceneObjects

@@ -22,7 +22,7 @@ namespace CatGame
             {
                 if (instance.NetworkedBehaviours[i] is IContextBehaviour behaviour)
                 {
-                    Debug.Log(instance.NetworkedBehaviours[i].name);
+                    Debug.Log(Context == null);
                     behaviour.Context = Context;
                 }
             }
