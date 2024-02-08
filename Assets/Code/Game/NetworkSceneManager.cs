@@ -6,6 +6,7 @@ namespace CatGame
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using UnityEditor.SearchService;
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.SceneManagement;
@@ -84,15 +85,14 @@ namespace CatGame
             _activationScene = null;
             _loadingInstance = _instanceID;
         }
-
-        protected override IEnumerator OnSceneLoaded(SceneRef sceneRef, UnityScene scene, NetworkLoadSceneParameters sceneParams)
+        protected override IEnumerator LoadSceneCoroutine(SceneRef sceneRef, NetworkLoadSceneParameters sceneParams)
         {
-            yield return base.OnSceneLoaded(sceneRef, scene, sceneParams);
+            yield return base.LoadSceneCoroutine(sceneRef, sceneParams);
             _currentScene = sceneRef;
-            _gameplayScene = scene.GetComponent<Base>(true);
+            _gameplayScene = _runner.SimulationUnityScene.GetComponent<Base>(true);
             _activationScene = _gameplayScene;
             _activationTimeout = Time.realtimeSinceStartup + 10.0f;
-            
+
             float contextTimeout = 20.0f;
 
             while (_gameplayScene.ContextReady == false && contextTimeout > 0.0f)
@@ -111,12 +111,17 @@ namespace CatGame
                 //FinishSceneLoading();
                 yield break;
             }
-            var contextBehaviours = scene.GetComponents<IContextBehaviour>(true);
+            var contextBehaviours = _runner.SimulationUnityScene.GetComponents<IContextBehaviour>(true);
             foreach (var behaviurs in contextBehaviours)
             {
                 Debug.Log($"//////////////////////////////{behaviurs}");
                 behaviurs.Context = _gameplayScene.Context;
             }
+        }
+        protected override IEnumerator OnSceneLoaded(SceneRef sceneRef, UnityScene scene, NetworkLoadSceneParameters sceneParams)
+        {
+            yield return base.OnSceneLoaded(sceneRef, scene, sceneParams);
+            
             //_runner.RegisterSceneObjects
         }
         private void Log(string message)
