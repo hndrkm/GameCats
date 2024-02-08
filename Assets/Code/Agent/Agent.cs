@@ -31,7 +31,7 @@ namespace CatGame
         public override void Spawned()
         {
             name = Object.InputAuthority.ToString();
-            _textNickname.text=Context.NetworkGame.GetPlayer(Object.InputAuthority).Nickname;
+            //_textNickname.text=Context.NetworkGame.GetPlayer(Object.InputAuthority).Nickname;
             _visualRoot.SetActive(true);
             _character.OnSpawned(this);
             _spells.OnSpawned();
