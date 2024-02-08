@@ -92,7 +92,7 @@ namespace CatGame
             _gameplayScene = scene.GetComponent<Base>(true);
             _activationScene = _gameplayScene;
             _activationTimeout = Time.realtimeSinceStartup + 10.0f;
-
+            
             float contextTimeout = 20.0f;
 
             while (_gameplayScene.ContextReady == false && contextTimeout > 0.0f)
@@ -114,7 +114,7 @@ namespace CatGame
             var contextBehaviours = scene.GetComponents<IContextBehaviour>(true);
             foreach (var behaviurs in contextBehaviours)
             {
-                
+                Debug.Log($"//////////////////////////////{behaviurs}");
                 behaviurs.Context = _gameplayScene.Context;
             }
             //_runner.RegisterSceneObjects
