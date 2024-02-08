@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4221708001658371016}
+  - {fileID: 6888933005850843105}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7811613717727518941
@@ -49,7 +49,7 @@ MonoBehaviour:
   _context:
     PeerUserID: 
     UI: {fileID: 0}
-    NetworkGame: {fileID: 0}
+    NetworkGame: {fileID: 8722673887336733902}
     Settings: {fileID: 0}
     IsVisible: 0
     HasInput: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
     ObservedAgent: {fileID: 0}
     WaitingAgentTransform: {fileID: 0}
     Matchmaking: {fileID: 0}
---- !u!1 &8340716628228153556
+--- !u!1 &8772758705252556123
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,23 +66,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4221708001658371016}
-  - component: {fileID: 3034117525503668551}
-  - component: {fileID: 7808888778947691392}
+  - component: {fileID: 6888933005850843105}
+  - component: {fileID: 8722673887336733902}
+  - component: {fileID: 4864323315696747753}
   m_Layer: 0
-  m_Name: networkgame
+  m_Name: NetworkGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4221708001658371016
+--- !u!4 &6888933005850843105
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8340716628228153556}
+  m_GameObject: {fileID: 8772758705252556123}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -91,13 +91,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3382297274765588023}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3034117525503668551
+--- !u!114 &8722673887336733902
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8340716628228153556}
+  m_GameObject: {fileID: 8772758705252556123}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a3492415aa57d247aa0a74968185022, type: 3}
@@ -105,23 +105,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerPrefab: {fileID: 7443915669086226277, guid: 4bfa0c4382eeadc4185f2dacec8eeaf0, type: 3}
   _modePrefabs:
-  - {fileID: 4553432830805708207, guid: 27c5ad47804dcdb4ebaea8b2d210774a, type: 3}
+  - {fileID: 8768041769986045018, guid: 27c5ad47804dcdb4ebaea8b2d210774a, type: 3}
   _Players: []
---- !u!114 &7808888778947691392
+--- !u!114 &4864323315696747753
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8340716628228153556}
+  m_GameObject: {fileID: 8772758705252556123}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1351802688
+  SortKey: 1369646402
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 3034117525503668551}
+  - {fileID: 8722673887336733902}
