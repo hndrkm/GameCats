@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace CatGame
@@ -16,6 +17,8 @@ namespace CatGame
 
         [SerializeField]
         private GameObject _areaVisual;
+        [Networked]
+        private AreaData _data_Networked { get; set; }
         private AreaData _aData { get; set; }
         
         private EHitType _hitType;
@@ -26,12 +29,12 @@ namespace CatGame
 
         public override void AutoCast(Agent owner, Vector2 position, float distance, LayerMask hitMask, EHitType hitType)
         {
-            if (Runner.IsResimulation == true)
+            if (IsPredicted == true && Runner.IsResimulation == true)
                 return;
             AreaData adata = default;
             adata.CastPosition = position;
             adata.DespawnCooldown = TickTimer.CreateFromSeconds(Runner,_castDespawnTime);
-            adata.StartTick = Runner.Tick;
+            adata.StartTick = Runner.Simulation.Tick;
             _hitType = hitType;
             _hitMask = hitMask;
             
@@ -52,7 +55,8 @@ namespace CatGame
         }
         public override void FixedUpdateNetwork()
         {
-            if (IsProxy == false)
+            bool isProxy = IsPredicted == false && IsProxy == true;
+            if (isProxy == false)
             {
                 var data = _aData;
                 CalculateArea(ref data);

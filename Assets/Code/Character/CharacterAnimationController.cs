@@ -9,14 +9,21 @@ namespace CatGame
         Agent agent;
         [SerializeField]
         Animator animator;
+        [SerializeField]
+        SpriteRenderer _renderer;
         private void Awake()
         {
             //animator = tryGetComponent<Animator>();
             agent = GetComponent<Agent>();
         }
-        private void Update()
+        private void LateUpdate()
         {
-            animator.SetFloat("vel",agent.Character.CMC.Velocity.magnitude);
+            if (agent.Character.CharacteController.Velocity.x < -0.1f)
+                _renderer.flipX = true;
+            else if (agent.Character.CharacteController.Velocity.x > 0.1f)
+                _renderer.flipX = false;
+
+            animator.SetFloat("vel",agent.Character.CharacteController.Velocity.magnitude);
         }
     }
 }

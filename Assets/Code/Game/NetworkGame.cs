@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Fusion;
-using System;
-using Unity.VisualScripting;
-using static Cinemachine.CinemachineTriggerAction.ActionSettings;
+
 
 namespace CatGame
 {
+    using System.Collections.Generic;
+    using UnityEngine;
     public class NetworkGame : ContextBehaviour, IPlayerJoined, IPlayerLeft
     {
         [Networked, HideInInspector, Capacity(byte.MaxValue)]
@@ -35,24 +32,14 @@ namespace CatGame
                 _gameplayMode = Runner.Spawn(prefab);
             }
             _localPlayer = Runner.LocalPlayer;
+
             _fusionCallbacks.DisconnectedFromServer -= OnDisconnectedFromServer;
             _fusionCallbacks.DisconnectedFromServer += OnDisconnectedFromServer;
+
             Runner.RemoveCallbacks(_fusionCallbacks);
             Runner.AddCallbacks(_fusionCallbacks);
+
             ActivePlayerCount = 0;
-        }
-        public void AsingContext() 
-        {
-            if (_gameplayMode == null)
-            {
-                return;
-            }
-            _gameplayMode.GetComponent<GameplayMode>().Context = Context;
-        }
-        private void OnSpawGamePlayMode(NetworkRunner runner,NetworkObject gameMode) 
-        {
-            gameMode.GetComponent<GameplayMode>().Context = Context;
-            Context.GameplayMode = gameMode.GetComponent<GameplayMode>();
         }
         public void Activate() 
         {
@@ -69,7 +56,7 @@ namespace CatGame
         }
         public Player GetPlayer(PlayerRef playerRef) 
         {
-            if (playerRef.IsRealPlayer == false)
+            if (playerRef.IsValid == false)
                 return null;
             if (Object == null)
                 return null;
@@ -82,7 +69,7 @@ namespace CatGame
             {
                 if(player == null)
                     continue;
-                var statistics =player.Statistics;
+                var statistics = player.Statistics;
                 if (statistics.IsValid == false)
                 {
                     continue;
@@ -95,18 +82,22 @@ namespace CatGame
         public override void FixedUpdateNetwork()
         {
             ActivePlayerCount = GetActivePlayerCoout();
+
             if (Object.HasStateAuthority == false)
                 return;
             if (_pendingPlayers.Count == 0)
                 return;
+
             var playersToRemove = ListPool.Get<PlayerRef>(128);
             foreach (var playerPair in _pendingPlayers)
             {
                 var playerRef = playerPair.Key;
                 var player = playerPair.Value;
+
                 if (player.IsInitialized == false)
                     continue;
                 playersToRemove.Add(playerRef);
+                Debug.Log(_pendingPlayers.Count);
                 if (_disconnectedPlayers.TryGetValue(player.UserID, out Player disconnectedPlayer) == true)
                 {
                     Runner.Despawn(player.Object);
@@ -114,9 +105,9 @@ namespace CatGame
                     player = disconnectedPlayer;
                     player.Object.AssignInputAuthority(playerRef);
                 }
-                Players.Set(playerRef.PlayerId,player);
+                Players.Set(playerRef,player);
 #if UNITY_EDITOR
-                player.gameObject.name = $"Player {player.Nickname}";
+                player.gameObject.name = $"Player{player.Nickname}";
 #endif
 
                 _gameplayMode.PlayerJoined(player);
@@ -132,23 +123,28 @@ namespace CatGame
         {
             if (Runner.IsServer == false) 
                 return;
-            if (_isActive) 
+            if (_isActive == false) 
                 return;
             SpawnPlayer(playerRef);
         }
 
         void IPlayerLeft.PlayerLeft(PlayerRef playerRef)
         {
-            if (playerRef.IsRealPlayer == false) return;
-            if (Runner.IsServer ==false) return;
-            if (_isActive == false) return;
-            Player player = Players[playerRef.PlayerId];
-            Players.Set(playerRef.PlayerId, null);
+            if (playerRef.IsValid == false) 
+                return;
+            if (Runner.IsServer ==false) 
+                return;
+            if (_isActive == false) 
+                return;
+
+            Player player = Players[playerRef];
+            Players.Set(playerRef, null);
             if (player != null)
             {
                 if (player.UserID.HasValue() == true)
                 {
                     _disconnectedPlayers[player.UserID] = player;
+                    _gameplayMode.PlayerLeft(player);
                     
                     player.Object.RemoveInputAuthority();
 #if UNITY_EDITOR
@@ -157,6 +153,7 @@ namespace CatGame
                 }
                 else
                 {
+                    _gameplayMode.PlayerLeft(player);
                     Runner.Despawn(player.Object);
                 }
             }

@@ -12,9 +12,29 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 3186453380328805188, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: maxSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
       propertyPath: SortKey
       value: 1201305645
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: ObjectInterest
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: AllowStateAuthorityOverride
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
+      value: -3146027027410413798
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
+      value: -1453665849352630008
       objectReference: {fileID: 0}
     - target: {fileID: 4079071792548778786, guid: 245197e9af541c1428bce76b11455cee, type: 3}
       propertyPath: m_LocalPosition.x
@@ -111,6 +131,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8260520561667085006}
   m_SourcePrefab: {fileID: 100100000, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+--- !u!212 &1559233356253002136 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5632580002370199478, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+  m_PrefabInstance: {fileID: 6595930477513205294}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2358926105992775402 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8878254136039088324, guid: 245197e9af541c1428bce76b11455cee, type: 3}
@@ -129,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8260520561667085006}
+  _renderer: {fileID: 1559233356253002136}
 --- !u!4 &4049476514877660923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7186569343764347093, guid: 245197e9af541c1428bce76b11455cee, type: 3}

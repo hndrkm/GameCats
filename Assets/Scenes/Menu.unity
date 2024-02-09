@@ -10051,8 +10051,20 @@ PrefabInstance:
       value: NetworkGame
       objectReference: {fileID: 0}
     - target: {fileID: 7794646870034481338, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
+      propertyPath: Flags
+      value: 264705
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794646870034481338, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
       propertyPath: SortKey
       value: 1515187283
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794646870034481338, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
+      value: 7513635224740928655
+      objectReference: {fileID: 0}
+    - target: {fileID: 7794646870034481338, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
+      value: -8658501628876142168
       objectReference: {fileID: 0}
     - target: {fileID: 8370574953577347337, guid: 9b739ba1ae9d82a44b9fe62347ab4ef4, type: 3}
       propertyPath: m_LocalPosition.x

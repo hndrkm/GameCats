@@ -38,7 +38,7 @@ namespace CatGame
 
         static ApplicationSettings()
         {
-            IsPublicBuild = PhotonAppSettings.Global.AppSettings.AppVersion.ToLowerInvariant().Contains("-public");
+            IsPublicBuild = PhotonAppSettings.Instance.AppSettings.AppVersion.ToLowerInvariant().Contains("-public");
         }
     }
 }

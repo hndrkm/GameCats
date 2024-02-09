@@ -28,10 +28,12 @@ namespace CatGame
         private Agent _agent;
         public void OnSpawned() 
         {
-            
-            if (Object.HasInputAuthority == false)
-            { return; }
+            _spellsRefresh = true;
+            if (Object.HasStateAuthority == false)
+                return;
+
             int bestSpellSlot = 0;
+
             for (int i = 0; i < _initialSpells.Length; i++)
             {
                 var spellPrefab = _initialSpells[i];
@@ -39,9 +41,6 @@ namespace CatGame
                     continue;
                 var spell = Runner.Spawn(spellPrefab,inputAuthority : Object.InputAuthority);
                 AddSpell(spell);
-                if (bestSpellSlot == 0)
-                    bestSpellSlot = spell.SpellSlot;
-                _spellsRefresh = true;
             }
         }
         public bool CanCastSpell(bool keyDown, int slot) 
@@ -114,6 +113,7 @@ namespace CatGame
                 }
                 _spells[i].SetParent(_slots[i].Active);
             }
+            _spellsRefresh = false;
         }
         private void PickupSpell(Spell spell) 
         {
@@ -139,9 +139,7 @@ namespace CatGame
         }
         private void RemoveSpell(int slot) 
         {
-            if (slot >= _spells.Length)
-                return;
-            var spell = _spells.Get(slot);
+            var spell = _spells[slot];
             if (spell == null)
                 return;
             if (spell.Owner != null)

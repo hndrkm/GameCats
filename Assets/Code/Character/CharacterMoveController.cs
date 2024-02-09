@@ -1,12 +1,14 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 namespace CatGame
 {
     public class CharacterMoveController : NetworkBehaviour
     {
         [SerializeField] private LayerMask _wallLayer;
+        public Collider2D Collider => _collider;
         private Collider2D _collider;
         public float acceleration = 10f;
         public float braking = 10f;
@@ -21,7 +23,7 @@ namespace CatGame
         }
         public override void FixedUpdateNetwork()
         {
-            base.FixedUpdateNetwork();
+
         }
 
         public void MoveCharacter(Vector2 direction) 
@@ -39,7 +41,8 @@ namespace CatGame
                 moveVelocity = Vector2.ClampMagnitude(moveVelocity + direction*acceleration*deltaTime, maxSpeed);
             }
             transform.Translate(moveVelocity*deltaTime);
-            Velocity = (transform.position -previusPos)*Runner.TickRate;
+            Velocity = (transform.position -previusPos)*Runner.Config.Simulation.TickRate;
         }
+
     }
 }

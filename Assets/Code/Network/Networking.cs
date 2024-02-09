@@ -62,7 +62,7 @@ namespace CatGame
                 Debug.LogError("No se puede comenzar con varios Peers. PeerMode esta configurado en unico.");
                 request.ExtraPeers = 0;
             }
-            SceneRef sceneRef = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath(request.ScenePath));
+            SceneRef sceneRef = SceneUtility.GetBuildIndexByScenePath(request.ScenePath);
             int totalPeers = 1 + request.ExtraPeers;
             session.GamePeers = new GamePeer[totalPeers];
             for (int i = 0; i < totalPeers; i++)
@@ -231,19 +231,20 @@ namespace CatGame
 
             NetworkRunner runner = Instantiate(Global.Settings.RunnerPrefab);
             runner.name = peerName;
+
             peer.Runner = runner;
             peer.SceneManager = runner.GetComponent<NetworkSceneManager>();
             peer.LoadedScene = default;
-            NetworkSceneInfo sceneInfo = new NetworkSceneInfo();
-            sceneInfo.AddSceneRef(peer.Scene,LoadSceneMode.Single);
+            
+            
             StartGameArgs startGameArgs = new StartGameArgs();
             startGameArgs.GameMode = peer.GameMode;
             startGameArgs.SessionName = peer.Request.SessionName;
-            startGameArgs.Scene = sceneInfo;
-            startGameArgs.EnableClientSessionCreation = false;
-            startGameArgs.ObjectProvider = pool;
+            startGameArgs.Scene = peer.Scene;
+            startGameArgs.ObjectPool = pool;
             startGameArgs.CustomLobbyName = peer.Request.CustomLobby;
             startGameArgs.SceneManager = peer.SceneManager;
+            startGameArgs.DisableClientSessionCreation = true;
 
             if (peer.Request.MaxPlayers > 0)
             {
@@ -386,7 +387,7 @@ namespace CatGame
 
             Log($"Scene.PrepareContext() - Peer {peer.ID}");
             scene.PrepareContext();
-
+            Debug.Log(scene.name);
             var sceneContext = scene.Context;
             sceneContext.IsVisible = peer.ID == 0;
             sceneContext.HasInput = peer.ID == 0;
@@ -400,7 +401,7 @@ namespace CatGame
 
             var networkGame = scene.GetComponentInChildren<NetworkGame>(true);
 
-            while (networkGame.Object == null || networkGame.Context == null)
+            while (networkGame.Object == null)
             {
                 Log($"Esperando NetworkGame - Peer {peer.ID}");
 
@@ -436,7 +437,6 @@ namespace CatGame
             while (scene.Context.GameplayMode == null)
             {
                 Log($"Esperando GameplayMode - Peer {peer.ID}");
-                //networkGame.AsingContext();
                 yield return null;
 
                 if (Time.realtimeSinceStartup >= limitTime)
@@ -463,7 +463,6 @@ namespace CatGame
 
             Log($"NetworkGame.Activate() - Peer {peer.ID}");
             networkGame.Activate();
-            Debug.Log(networkGame.Context == null);
 
             if (SceneManager.GetSceneByName(_loadingScene).IsValid() == true)
             {

@@ -52,7 +52,7 @@ namespace CatGame.UI
         }
         private void TryJoinLobby(bool force) 
         {
-            if (PhotonAppSettings.Global.AppSettings.AppIdFusion.HasValue() ==true)
+            if (PhotonAppSettings.Instance.AppSettings.AppIdFusion.HasValue() ==true)
             {
                 
                 Context.Matchmaking.JoinLobby(force);

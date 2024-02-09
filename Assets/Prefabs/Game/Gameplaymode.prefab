@@ -45,12 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 224254179
   ObjectInterest: 1
-  Flags: 262145
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 264449
+  NetworkGuid:
+    RawGuidValue: 27c5ad47804dcdb4ebaea8b2d210774a
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8768041769986045018}
+  SimulationBehaviours: []
 --- !u!114 &8768041769986045018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,10 +69,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26d6bb738ad54a648bdcaefec892d84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   GameplayName: Versus
   MaxPlayers: 2
   ScorePerKill: 1
   ScorePerDeath: -1
   TimeLimit: 500
-  _State: 0
   _type: 1

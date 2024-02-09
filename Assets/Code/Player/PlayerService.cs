@@ -11,7 +11,7 @@ namespace CatGame
         public Action<PlayerData> PlayerDataChanged;
 
         public PlayerData PlayerData { get; private set; }
-        async void IGlobalService.Initialize()
+        void IGlobalService.Initialize()
         {
             PlayerData = LoadPlayer();
             PlayerData.Lock();

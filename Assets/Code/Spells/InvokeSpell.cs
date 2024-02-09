@@ -43,7 +43,7 @@ namespace CatGame
                 return;
             }
             int? cooldownTargetTick = _cooldown.TargetTick;
-            if (cooldownTargetTick.HasValue == true && cooldownTargetTick.Value <= Runner.Tick)
+            if (cooldownTargetTick.HasValue == true && cooldownTargetTick.Value <= Runner.Simulation.Tick)
             {
                 IsCasting = false;
             }
@@ -101,7 +101,7 @@ namespace CatGame
             if (area == null)
                 return true;
             area.AutoCast(Owner, areaPosition, areaEffect, hitMask, HitType);
-            float castTime = (Runner.Tick) * Runner.DeltaTime;
+            float castTime = (Runner.Simulation.Tick) * Runner.Simulation.Tick;
             area.SetDespawnCooldown(_areaDespawnTime);
 
             void BeforeAreaSpawned(NetworkRunner runner, NetworkObject spawnedObject)

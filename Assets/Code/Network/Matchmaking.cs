@@ -13,6 +13,7 @@ namespace CatGame
     {
         public bool IsJoiningToLobby;
         public bool IsConnectedToLobby;
+
         public Action LobbyJoined;
         public Action<string> LobbyJoinFailed;
         public Action LobbyLeft;
@@ -89,7 +90,7 @@ namespace CatGame
             await LeaveLobby();
 
             _currentRegion = Context.RuntimeSettings.Region;
-            PhotonAppSettings.Global.AppSettings.FixedRegion = _currentRegion;
+            PhotonAppSettings.Instance.AppSettings.FixedRegion = _currentRegion;
 
             var joinTask = _lobbyRunner.JoinSessionLobby(SessionLobby.Custom, _lobbyName);
             await joinTask;
@@ -148,7 +149,7 @@ namespace CatGame
         {
             base.OnActivate();
 
-            PhotonAppSettings.Global.AppSettings.FixedRegion = Context.RuntimeSettings.Region;
+            PhotonAppSettings.Instance.AppSettings.FixedRegion = Context.RuntimeSettings.Region;
         }
 
         protected override void OnTick()
@@ -192,7 +193,7 @@ namespace CatGame
             ConnectedToServer?.Invoke(runner);
         }
 
-        void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner,NetDisconnectReason reason)
+        void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner)
         {
             DisconnectedFromServer.Invoke(runner);
         }
@@ -227,7 +228,7 @@ namespace CatGame
             HostMigration?.Invoke(runner, hostMigrationToken);
         }
 
-        void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player,ReliableKey key, ArraySegment<byte> data)
+        void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
         {
             ReliableDataReceived?.Invoke(runner, player, data);
         }
@@ -252,7 +253,7 @@ namespace CatGame
             throw new NotImplementedException();
         }
 
-        public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
+        public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, float progress)
         {
             throw new NotImplementedException();
         }

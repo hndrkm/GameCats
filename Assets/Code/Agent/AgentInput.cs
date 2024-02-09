@@ -12,7 +12,7 @@ namespace CatGame
     public class AgentInput : ContextBehaviour, IBeforeUpdate, IBeforeTick
     {
         public GameplayInput FixedInput { get { CheckFixedAccess(false); return _fixedInput; } }
-        public GameplayInput RenderInput { get { return _renderInput; } }
+        public GameplayInput RenderInput { get { CheckRenderAccess(false); return _renderInput; } }
         public GameplayInput CachedInput { get { CheckFixedAccess(false); return _cachedInput; } }
 
         public bool IsReloadPower => Time.time < _reloadStartTime+_reloadDruration;
@@ -21,7 +21,7 @@ namespace CatGame
         [SerializeField]
         private bool _logMissingInputs;
 
-        [Networked]
+        [Networked(nameof(AgentInput))]
         private GameplayInput _lastKnownInput { get; set; }
         private Agent _agent;
 
@@ -153,7 +153,7 @@ namespace CatGame
             _missingInputsInRow = default;
 
 
-            _logMissingInputFromTick = Runner.Tick + Runner.TickRate * 4;
+            _logMissingInputFromTick = Runner.Simulation.Tick + Runner.Config.Simulation.TickRate * 4;
 
             if (_agent.IsLocal == false)
                 return;
@@ -247,6 +247,7 @@ namespace CatGame
             _cachedInput.Actions = new NetworkButtons(_cachedInput.Actions.Bits | _renderInput.Actions.Bits);
             _cachedInput.MoveDirection = _cachedMoveDirection / _cachedMoveDirectionSize;
             _cachedInput.AimLocation = _renderInput.AimLocation;
+
         }
         void IBeforeTick.BeforeTick()
         {

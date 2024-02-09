@@ -75,16 +75,7 @@
             <param name="port">Port used to build the NetAddress</param>
             <returns>New NetAddress reference</returns>
         </member>
-        <member name="M:Fusion.Sockets.NetAddress.CreateFromIpPort(System.String,System.UInt16)">
-            <summary>
-            Create a new NetAddress based on the IP and Port passed as argument
-            </summary>
-            <param name="ip">String representation of an IP, either IPv4 or IPv6</param>
-            <param name="port">Port used to build the NetAddress</param>
-            <returns>New NetAddress reference</returns>
-            <exception cref="T:System.ArgumentException">If IP is empty/null or an invalid IP, or port &lt; 0</exception>
-            <exception cref="T:Fusion.AssertException">If unable to parse IP</exception>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Fusion.Sockets.NetAddress.CreateFromIpPort(System.String,System.UInt16)" -->
         <member name="T:Fusion.Sockets.NetAddress.SubnetMask">
             <summary>
             IPv4 Subnet Mask Utilities
@@ -369,17 +360,13 @@
         </member>
         <member name="M:Fusion.Sockets.NetSequencer.Distance(System.UInt64,System.UInt64)">
             <summary>
-            Calculates the distance between two sequence numbers, taking into account the circular nature of the sequence.
+            if from is LARGER than to, result is positive
+            if from is LESSER than to, result is negative
+            if they are the same, result is zero
             </summary>
-            <param name="from">The sequence number to start from.</param>
-            <param name="to">The sequence number to calculate the distance to.</param>
-            <returns>
-            The distance between the two sequence numbers. 
-            If 'from' is larger than 'to', the result is positive. 
-            If 'from' is lesser than 'to', the result is negative. 
-            If they are the same, the result is zero.
-            </returns>
-            <exception cref="T:System.ArgumentException">Thrown when the calculated distance is outside the range of an integer.</exception>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
         </member>
         <member name="F:Fusion.Sockets.NetSocketRelay._handle">
             <summary>
@@ -436,15 +423,15 @@
             <summary>
             This class implements STUN Client. Defined in RFC 8489
             
-            <see href="https://datatracker.ietf.org/doc/html/rfc8489"/> Session Traversal Utilities for NAT (STUN)
-            <see href="https://datatracker.ietf.org/doc/html/rfc8656"/> Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT(STUN)
-            <see href="https://datatracker.ietf.org/doc/html/rfc8305"/> Happy Eyeballs Version 2: Better Connectivity Using Concurrency
-            <see href="https://datatracker.ietf.org/doc/html/rfc5128"/> State of Peer-to-Peer (P2P) Communication across Network Address Translators(NATs)
-            <see href="https://www.netmanias.com/en/post/techdocs/6067/nat-network-protocol/nat-behavior-discovery-using-stun-rfc-5780"/>
-            <see href="https://www.voip-info.org/stun/"/>
-            <see href="https://tailscale.com/blog/how-nat-traversal-works/"/>
-            <see href="https://serverfault.com/questions/782627/udp-hole-punching-still-required-in-ipv6-even-without-nat"/>
-            <see href="https://serverfault.com/questions/184524/switching-to-ipv6-implies-dropping-nat-is-that-a-good-thing"/>
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc8489"/> Session Traversal Utilities for NAT (STUN)
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc8656"/> Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT(STUN)
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc8305"/> Happy Eyeballs Version 2: Better Connectivity Using Concurrency
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc5128"/> State of Peer-to-Peer (P2P) Communication across Network Address Translators(NATs)
+            <see cref="!:https://www.netmanias.com/en/post/techdocs/6067/nat-network-protocol/nat-behavior-discovery-using-stun-rfc-5780"/>
+            <see cref="!:https://www.voip-info.org/stun/"/>
+            <see cref="!:https://tailscale.com/blog/how-nat-traversal-works/"/>
+            <see cref="!:https://serverfault.com/questions/782627/udp-hole-punching-still-required-in-ipv6-even-without-nat"/>
+            <see cref="!:https://serverfault.com/questions/184524/switching-to-ipv6-implies-dropping-nat-is-that-a-good-thing"/>
             </summary>
         </member>
         <member name="T:Fusion.Sockets.Stun.StunClient.TestIPs">
@@ -454,25 +441,17 @@
         </member>
         <member name="M:Fusion.Sockets.Stun.StunClient.QueryPublicAddress(Fusion.Sockets.NetPeer*,Fusion.Sockets.INetSocket,System.Net.Sockets.AddressFamily,System.Guid@)">
             <summary>
-            Sends a STUN Binding Request to a public STUN server to discover peer reflexive addresses.
+            Run a STUN Binding Request against the Public STUN Server in order to discover peer reflexive addresses
             </summary>
-            <param name="peer">A reference to the network peer.</param>
-            <param name="socket">A reference to the network socket.</param>
-            <param name="originalFamily">The original address family.</param>
-            <param name="requestID">The ID of the request. This is a reference parameter that may be changed within the method if necessary.</param>
-            <returns>
-            Returns true if the STUN Binding Request was successfully sent, false otherwise.
-            </returns>
-            <exception cref="T:System.Exception">Thrown when an error occurs while sending the STUN Binding Request.</exception>
+            <param name="peer">Network Peer reference</param>
+            <param name="socket">Network Socket reference</param>
+            <returns>Running Task of the STUN Query Procedure</returns>
         </member>
         <member name="M:Fusion.Sockets.Stun.StunClient.GetLocalAddress(System.Net.Sockets.AddressFamily@,System.Net.IPAddress@)">
             <summary>
-            Retrieves the local IP endpoint currently active.
+            Retrieve the Local IP Endpoint currently active
             </summary>
-            <param name="addressFamily">The address family to be used.</param>
-            <param name="localIP">The local IP address that is currently active. This is an output parameter.</param>
-            <returns>Returns true if the local IP address was successfully retrieved, false otherwise.</returns>
-            <exception cref="T:System.Net.Sockets.SocketException">Thrown when an error occurs while creating the socket or connecting to the test IP.</exception>
+            <returns></returns>
         </member>
         <member name="T:Fusion.Sockets.Stun.StunErrorAttribute">
             <summary>
@@ -566,7 +545,6 @@
             Parses STUN message from raw data packet.
             </summary>
             <param name="data">Raw STUN message.</param>
-            <param name="length">Length of raw STUN message.</param>
         </member>
         <member name="M:Fusion.Sockets.Stun.StunMessage.Serialize">
             <summary>
@@ -630,10 +608,10 @@
         </member>
         <member name="M:Fusion.Sockets.Stun.StunResult.#ctor(Fusion.Sockets.NetAddress,Fusion.Sockets.NetAddress)">
             <summary>
-            Initializes a new instance of the <see cref="T:Fusion.Sockets.Stun.StunResult"/> class.
+            Default constructor.
             </summary>
-            <param name="publicEndPoint">The public IP endpoint. Defaults to an unspecified IPv4 address.</param>
-            <param name="privateEndPoint">The private IP endpoint. Defaults to an unspecified IPv4 address.</param>
+            <param name="netType">Specifies UDP network type.</param>
+            <param name="publicEndPoint">Public IP end point.</param>
         </member>
         <member name="T:Fusion.Sockets.Stun.StunServers">
             <summary>
@@ -642,13 +620,11 @@
         </member>
         <member name="M:Fusion.Sockets.Stun.StunServers.BuildIP(System.String)">
             <summary>
-            Builds a STUN server object from a given STUN server address.
+            
+            <see cref="!:https://datatracker.ietf.org/doc/html/rfc5952#section-6"/>
             </summary>
-            <param name="stunServerAddr">The STUN server address in the format "ip:port".</param>
-            <returns>A Task that represents the asynchronous operation. The Task's result is the STUN server object.</returns>
-            <exception cref="T:System.FormatException">Thrown when the provided STUN server address is not in the correct format.</exception>
-            <exception cref="T:System.Net.Sockets.SocketException">Thrown when an error is encountered when resolving the hostname to an IP address.</exception>
-            <seealso href="https://datatracker.ietf.org/doc/html/rfc5952#section-6"/>
+            <param name="stunServer"></param>
+            <returns></returns>
         </member>
         <member name="P:Fusion.Protocol.BitStream.Size">
             <summary>
@@ -711,17 +687,6 @@
             How the conversion happens depends on the the Type of Communicator
             </summary>
         </member>
-        <member name="T:Fusion.Protocol.ChangeMasterClient">
-            <summary>
-            Change master client request Message
-            Used to signal that Fusion Simulation should start
-            </summary>
-        </member>
-        <member name="F:Fusion.Protocol.ChangeMasterClient.NewMasterClientCandidate">
-            <summary>
-            Player Unique Ref
-            </summary>
-        </member>
         <member name="T:Fusion.Protocol.Message">
             <summary>
             Base Protocol Message.
@@ -729,7 +694,7 @@
             This concentrates the basics for serialization and cloning
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.Message.CustomDataLenght">
+        <member name="F:Fusion.Protocol.Message.CUSTOM_DATA_LENGHT">
             <summary>
             Max Lenght of the Custom Data
             </summary>
@@ -753,13 +718,13 @@
             <summary>
             Creates a copy of this Message
             </summary>
+            <returns></returns>
         </member>
         <member name="M:Fusion.Protocol.Message.#ctor(Fusion.Protocol.ProtocolMessageVersion,System.Version)">
             <summary>
             Created a new Message with a certain version
             </summary>
             <param name="protocolMessage">Protocol Message Version</param>
-            <param name="serializationVersion">Fusion Serialization Version</param>
         </member>
         <member name="M:Fusion.Protocol.Message.Serialize(Fusion.Protocol.BitStream)">
             <summary>
@@ -771,14 +736,15 @@
             <summary>
             Used by the specialized versions of Message to serialize its data
             </summary>
-            <param name="stream">Buffer to read from or write into the data of the Message</param>
+            <param name="serializer">Buffer to read from or write into the data of the Message</param>
         </member>
-        <member name="M:Fusion.Protocol.Message.CheckCompability(Fusion.Protocol.ProtocolMessageVersion,System.Version)">
+        <member name="M:Fusion.Protocol.Message.CheckCompability(Fusion.Protocol.ProtocolMessageVersion,System.Version,System.Boolean)">
             <summary>
             Check if this Message is compatible with target versions
             </summary>
             <param name="targetProtocolVersion">Target Protocol Message Version</param>
             <param name="pluginSerializationVersion">Target Fusion Serialization Version</param>
+            <param name="enableSerializationVersionCheck">Enable the Serialization Version Check</param>
             <returns>True if message is compatible with versions</returns>
         </member>
         <member name="T:Fusion.Protocol.Disconnect">
@@ -802,9 +768,7 @@
             <summary>
             Disconnect Protocol Message
             </summary>
-            <param name="reason">The reason for the disconnection.</param>
-            <param name="protocolVersion">The version of the protocol to be used. Defaults to the latest protocol version.</param>
-            <param name="serializationVersion">The version of the serialization to be used. Defaults to null.</param>
+            <param name="reason">Disconnect Reason</param>
         </member>
         <member name="T:Fusion.Protocol.DisconnectReason">
             <summary>
@@ -945,11 +909,6 @@
             Peer Unique ID
             </summary>
         </member>
-        <member name="F:Fusion.Protocol.Join.PlayerRef">
-            <summary>
-            Player Unique Ref
-            </summary>
-        </member>
         <member name="T:Fusion.Protocol.SyncType">
             <summary>
             Network Config Msg Type
@@ -1088,15 +1047,32 @@
             CRC Hash based on the content of the internal data or the expected CRC after all fragments are computed
             </summary>
         </member>
-        <member name="M:Fusion.Protocol.Snapshot.ComputeCRC(System.Byte[],System.Int32)">
+        <member name="P:Fusion.Protocol.Snapshot.SnapshotBuffer">
+            <summary>
+            Actual Snapshot data
+            </summary>
+        </member>
+        <member name="P:Fusion.Protocol.Snapshot.SnapshotSize">
+            <summary>
+            Snapshot Total Size
+            </summary>
+        </member>
+        <member name="M:Fusion.Protocol.Snapshot.ComputeCRC(System.Byte[])">
             <summary>
             Computes the CRC64 of the current Buffer Data stored on the Snapshot
             </summary>
+        </member>
+        <member name="M:Fusion.Protocol.Snapshot.Merge(Fusion.Protocol.Snapshot)">
+            <summary>
+            Merge the received Snapshot data on this own data
+            </summary>
+            <param name="snapshot">Snapshot to be merged</param>
         </member>
         <member name="M:Fusion.Protocol.Snapshot.Clone">
             <summary>
             Create a clone with this Snapshot and reset reference
             </summary>
+            <returns></returns>
         </member>
         <member name="T:Fusion.Protocol.StartRequests">
             <summary>
@@ -1177,14 +1153,14 @@
             <summary>
             Zero (0) means: if it should be the room itself (authorative event).
             
-            <see href="https://doc-api.photonengine.com/en/plugins/v4/interface_photon_1_1_hive_1_1_plugin_1_1_i_plugin_host.html#a756dbd7b16fac7b43cb153506a442a99"/>
+            <see cref="!:https://doc-api.photonengine.com/en/plugins/v4/interface_photon_1_1_hive_1_1_plugin_1_1_i_plugin_host.html#a756dbd7b16fac7b43cb153506a442a99"/>
             </summary>
         </member>
         <member name="F:Fusion.Protocol.PhotonConstants.FUSION_DATA_EVENT_PARAMETER_CODE">
             <summary>
             Default CustomData Key of Realtime Events
             
-            <see href="https://doc-api.photonengine.com/en/dotnet/current/class_exit_games_1_1_client_1_1_photon_1_1_event_data.html#a85c3ee46f89cc41d459ababb1d55d150"/>
+            <see cref="!:https://doc-api.photonengine.com/en/dotnet/current/class_exit_games_1_1_client_1_1_photon_1_1_event_data.html#a85c3ee46f89cc41d459ababb1d55d150"/>
             </summary>
         </member>
         <member name="T:Fusion.Protocol.ProtocolSerializer">
@@ -1241,16 +1217,6 @@
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_2_3">
             <summary>
             Added Peer Unique Key
-            </summary>
-        </member>
-        <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_3_0">
-            <summary>
-            Added Join Message PlayerRef
-            </summary>
-        </member>
-        <member name="F:Fusion.Protocol.ProtocolMessageVersion.V1_4_0">
-            <summary>
-            Rework Host Migration
             </summary>
         </member>
         <member name="F:Fusion.Protocol.ProtocolMessageVersion.LATEST">

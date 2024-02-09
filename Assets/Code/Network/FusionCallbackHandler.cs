@@ -28,14 +28,14 @@ namespace CatGame
         void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, Fusion.NetworkInput input) { if (InputMissing != null) { InputMissing(runner, player, input); } }
         void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { if (Shutdown != null) { Shutdown(runner, shutdownReason); } }
         void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner) { if (ConnectedToServer != null) { ConnectedToServer(runner); } }
-        void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason shutdownReason) { if (DisconnectedFromServer != null) { DisconnectedFromServer(runner); } }
+        void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner) { if (DisconnectedFromServer != null) { DisconnectedFromServer(runner); } }
         void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { if (ConnectRequest != null) { ConnectRequest(runner, request, token); } }
         void INetworkRunnerCallbacks.OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { if (ConnectFailed != null) { ConnectFailed(runner, remoteAddress, reason); } }
         void INetworkRunnerCallbacks.OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { if (UserSimulationMessage != null) { UserSimulationMessage(runner, message); } }
         void INetworkRunnerCallbacks.OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { if (SessionListUpdated != null) { SessionListUpdated(runner, sessionList); } }
         void INetworkRunnerCallbacks.OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { if (CustomAuthenticationResponse != null) { CustomAuthenticationResponse(runner, data); } }
         void INetworkRunnerCallbacks.OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { if (HostMigration != null) { HostMigration(runner, hostMigrationToken); } }
-        void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { if (ReliableDataReceived != null) { ReliableDataReceived(runner, player, data); } }
+        void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { if (ReliableDataReceived != null) { ReliableDataReceived(runner, player, data); } }
         void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner) { if (SceneLoadDone != null) { SceneLoadDone(runner); } }
         void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner) { if (SceneLoadStart != null) { SceneLoadStart(runner); } }
 
@@ -54,12 +54,12 @@ namespace CatGame
             throw new NotImplementedException();
         }
 
-        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
+        public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player,  ArraySegment<byte> data)
         {
             throw new NotImplementedException();
         }
 
-        public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
+        public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, float progress)
         {
             throw new NotImplementedException();
         }

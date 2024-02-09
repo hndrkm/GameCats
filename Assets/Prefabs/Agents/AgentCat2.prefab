@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: SortKey
       value: 278070339
       objectReference: {fileID: 0}
+    - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
+      value: 4915157054123732250
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235480172868239307, guid: 245197e9af541c1428bce76b11455cee, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
+      value: 8228825014059076072
+      objectReference: {fileID: 0}
     - target: {fileID: 4079071792548778786, guid: 245197e9af541c1428bce76b11455cee, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -66,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8878254136039088324, guid: 245197e9af541c1428bce76b11455cee, type: 3}
       propertyPath: m_Name
-      value: AgentCat1 1
+      value: AgentCat2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

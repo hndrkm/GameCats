@@ -33,7 +33,7 @@ namespace CatGame
             adata.CastPosition = position;
             //_data.InitialVelocity
             adata.DespawnCooldown = TickTimer.CreateFromSeconds(Runner, _castDespawnTime);
-            adata.StartTick = Runner.Tick;
+            adata.StartTick = Runner.Simulation.Tick;
             _hitType = hitType;
             _hitMask = hitMask;
 
