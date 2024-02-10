@@ -5,8 +5,6 @@ namespace CatGame
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using UnityEngine.UIElements;
-    using static Cinemachine.CinemachineTriggerAction.ActionSettings;
 
     public struct KillData : INetworkStruct
     {

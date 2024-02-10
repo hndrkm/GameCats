@@ -32,13 +32,13 @@ namespace CatGame
         public override void Spawned()
         {
             name = Object.InputAuthority.ToString();
-
+            /*
             var earlyAgentController = GetComponent<EarlyAgentController>();
             earlyAgentController.SetDelegates(OnEarlyFixedUpdate, OnEarlyRender);
 
             var lateAgentController = GetComponent<LateAgentController>();
             lateAgentController.SetDelegates(OnLateFixedUpdate, OnLateRender);
-
+            */
             _textNickname.text=Context.NetworkGame.GetPlayer(Object.InputAuthority).Nickname;
             
             _visualRoot.SetActive(true);
@@ -46,6 +46,7 @@ namespace CatGame
             _character.OnSpawned(this);
             _spells.OnSpawned();
             _health.OnSpawned(this);
+            
         }
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
@@ -57,16 +58,20 @@ namespace CatGame
             {
                 _health.OnDespawned();
             }
-
+            /*
             var earlyAgentController = GetComponent<EarlyAgentController>();
             earlyAgentController.SetDelegates(null, null);
 
             var lateAgentController = GetComponent<LateAgentController>();
             lateAgentController.SetDelegates(null, null);
+            */
         }
         public override void FixedUpdateNetwork()
         {
-
+            if (GetInput(out GameplayInput input))
+            {
+                _character.CharacteController.MoveCharacter(input.MoveDirection);
+            }
         }
         public override void Render()
         {
@@ -78,10 +83,11 @@ namespace CatGame
             _character = GetComponent<Character>();
             _spells = GetComponent<Spells>();
             _health = GetComponent<Health>();
-            _networkCulling = GetComponent<NetworkCulling>();
+            //_networkCulling = GetComponent<NetworkCulling>();
 
-            _networkCulling.Updated += OnCullingUpdated;
+            //_networkCulling.Updated += OnCullingUpdated;
         }
+        /*
         private void OnEarlyFixedUpdate()
         {
             if (_networkCulling.IsCulled == true)
@@ -176,6 +182,14 @@ namespace CatGame
             cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
 
         }
+        private void OnCullingUpdated(bool isCulled) 
+        {
+            bool isActive = isCulled == false;
+            _visualRoot.SetActive(isActive);
+            if(_character.CharacteController.Collider != null)
+                _character.CharacteController.Collider.enabled = isActive;
+        }
+        */
         
         private void TryPower(bool cast,bool hold) 
         {
@@ -201,12 +215,6 @@ namespace CatGame
         {
             return _spells.CanAim(0);
         }
-        private void OnCullingUpdated(bool isCulled) 
-        {
-            bool isActive = isCulled == false;
-            _visualRoot.SetActive(isActive);
-            if(_character.CharacteController.Collider != null)
-                _character.CharacteController.Collider.enabled = isActive;
-        }
+        
     }
 }
