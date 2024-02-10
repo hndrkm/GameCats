@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 4079071792548778786}
   - component: {fileID: 3235480172868239307}
   - component: {fileID: -8724587919588689332}
-  - component: {fileID: -3098109669473792161}
+  - component: {fileID: -1713729855615495489}
   - component: {fileID: 5471142265988532795}
   - component: {fileID: 3186453380328805188}
   - component: {fileID: 6251103998166242243}
@@ -402,7 +402,8 @@ GameObject:
   - component: {fileID: 5819663838634090460}
   - component: {fileID: 8312141037808497545}
   - component: {fileID: 8667135533136087225}
-  - component: {fileID: 6507764089703476579}
+  - component: {fileID: 5786457769414954346}
+  - component: {fileID: 1639758109682465432}
   m_Layer: 0
   m_Name: AgentBase
   m_TagString: Untagged
@@ -450,11 +451,12 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -8724587919588689332}
-  - {fileID: -3098109669473792161}
+  - {fileID: -1713729855615495489}
   - {fileID: 5471142265988532795}
   - {fileID: 3186453380328805188}
   - {fileID: 8192977956904334744}
   - {fileID: 5819663838634090460}
+  - {fileID: 1639758109682465432}
   SimulationBehaviours:
   - {fileID: 6251103998166242243}
   - {fileID: 8312141037808497545}
@@ -472,7 +474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
---- !u!114 &-3098109669473792161
+--- !u!114 &-1713729855615495489
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -481,12 +483,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8878254136039088324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83fcd9061ae4759429b6be38580a8748, type: 3}
+  m_Script: {fileID: 11500000, guid: a5d809edf3484a64286fa159ab38b8c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _reloadDruration: 1
-  _logMissingInputs: 0
 --- !u!114 &5471142265988532795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,15 +600,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c625f568c5a936c4ca2157405f3d84da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &6507764089703476579
-CircleCollider2D:
+--- !u!143 &5786457769414954346
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8878254136039088324}
-  m_Enabled: 1
-  m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -617,21 +615,50 @@ CircleCollider2D:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.5
   m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1639758109682465432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8878254136039088324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 4916038580379203118}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
+  gravity: -20
+  jumpImpulse: 8
+  acceleration: 10
+  braking: 10
+  maxSpeed: 2
+  rotationSpeed: 15
+  _IsGrounded: 0
+  _Velocity: {x: 0, y: 0, z: 0}

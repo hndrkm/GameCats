@@ -3,6 +3,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace CatGame
@@ -18,14 +19,21 @@ namespace CatGame
         {
             _agent = GetComponent<Agent>();
         }
-
+        public override void Spawned()
+        {
+            if (Object.HasInputAuthority) 
+            {
+                Runner.AddCallbacks(this);
+            }
+        }
 
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
-            if (Object.HasInputAuthority == false)
-                return;
+            _actionInput.MoveDirection = _moveDirection;
+            _actionInput.AimLocation = _aimLocation;   
             input.Set(_actionInput);
-            _actionInput = default;
+            
+            //_actionInput = default;
         }
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
         {
@@ -34,19 +42,13 @@ namespace CatGame
 
         public void Update()
         {
-
-            if (_agent.IsLocal == false)
-                return;
-
-
             Vector2 moveDirection;
             Vector2 aimLocation = Vector2.zero;
-
 
             Mouse mouse = Mouse.current;
             Keyboard keyboard = Keyboard.current;
             Vector2 mousePosition = mouse.delta.ReadValue() * 0.05f;
-
+            _moveDirection = Vector2.zero;
             moveDirection = Vector2.zero;
             if (mouse.leftButton.isPressed)
             {
@@ -65,30 +67,12 @@ namespace CatGame
                 moveDirection.Normalize();
             }
 
-
-            _actionInput.MoveDirection = moveDirection;
-            _actionInput.AimLocation = _aimLocation;
-            _actionInput.Aim = mouse.leftButton.isPressed;
-            _actionInput.Attack = mouse.leftButton.wasReleasedThisFrame;
-            _actionInput.Power = keyboard.eKey.isPressed;
-            _actionInput.Reload = keyboard.rKey.isPressed;
-            _actionInput.Interact = keyboard.fKey.isPressed;
-#if UNITY_EDITOR
-            _actionInput.ToggleSpeed = keyboard.backquoteKey.isPressed;
-#else
-			_actionInput.ToggleSpeed       = keyboard.leftCtrlKey.isPressed & keyboard.leftAltKey.isPressed & keyboard.backquoteKey.isPressed;
-#endif
+            _moveDirection = moveDirection.normalized;
             if (mouse.leftButton.wasReleasedThisFrame)
             {
                 _aimLocation = default;
             }   
 
-            float deltaTime = Time.deltaTime;
-            _moveDirection += moveDirection * deltaTime;
-
-            //_actionInput.Actions = new NetworkButtons(_cachedInput.Actions.Bits | _renderInput.Actions.Bits);
-            //_actionInput.MoveDirection = _cachedMoveDirection / _cachedMoveDirectionSize;
-            //_actionInput.AimLocation = _renderInput.AimLocation;
         }
 
 

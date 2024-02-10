@@ -8,8 +8,8 @@ namespace CatGame
     public class CharacterMoveController : NetworkBehaviour
     {
         [SerializeField] private LayerMask _wallLayer;
-        public Collider2D Collider => _collider;
-        private Collider2D _collider;
+        //public Collider2D Collider => _characterController;
+        private CharacterController _characterController;
         public float acceleration = 10f;
         public float braking = 10f;
         public float maxSpeed= 2f;
@@ -19,7 +19,7 @@ namespace CatGame
 
         private void Awake()
         {
-            _collider = GetComponent<Collider2D>();
+            _characterController = GetComponent<CharacterController>();
         }
         public override void FixedUpdateNetwork()
         {
@@ -40,8 +40,8 @@ namespace CatGame
             {
                 moveVelocity = Vector2.ClampMagnitude(moveVelocity + direction*acceleration*deltaTime, maxSpeed);
             }
-            transform.Translate(moveVelocity*deltaTime);
-            Velocity = (transform.position -previusPos)*Runner.Config.Simulation.TickRate;
+            _characterController.Move(moveVelocity*deltaTime);
+            Velocity = (transform.position - previusPos)*Runner.Config.Simulation.TickRate;
         }
 
     }

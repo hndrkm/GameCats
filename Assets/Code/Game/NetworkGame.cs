@@ -97,7 +97,6 @@ namespace CatGame
                 if (player.IsInitialized == false)
                     continue;
                 playersToRemove.Add(playerRef);
-                Debug.Log(_pendingPlayers.Count);
                 if (_disconnectedPlayers.TryGetValue(player.UserID, out Player disconnectedPlayer) == true)
                 {
                     Runner.Despawn(player.Object);

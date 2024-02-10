@@ -200,8 +200,6 @@ namespace CatGame
                 TrySpawnAgent(player);
             }
 
-
-
             RPC_PlayerJoinedGame(player.Object.InputAuthority);
         }
         public void PlayerLeft(Player player)
