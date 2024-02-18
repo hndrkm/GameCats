@@ -28,6 +28,7 @@ namespace CatGame
         public string CustomLobby;
         public string IPAddress;
         public ushort Port;
+        public bool isPrivate;
     }
     public class Networking : MonoBehaviour
     {
@@ -245,7 +246,7 @@ namespace CatGame
             startGameArgs.CustomLobbyName = peer.Request.CustomLobby;
             startGameArgs.SceneManager = peer.SceneManager;
             startGameArgs.DisableClientSessionCreation = true;
-
+            startGameArgs.IsVisible = peer.Request.isPrivate;
             if (peer.Request.MaxPlayers > 0)
             {
                 startGameArgs.PlayerCount = peer.Request.MaxPlayers;

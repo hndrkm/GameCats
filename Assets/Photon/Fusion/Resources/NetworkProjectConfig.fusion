@@ -157,7 +157,7 @@
         "Assembly-CSharp",
         "Assembly-CSharp-firstpass"
     ],
-    "UseSerializableDictionary": true,
+    "UseSerializableDictionary": false,
     "NullChecksForNetworkedProperties": true,
     "CheckRpcAttributeUsage": false,
     "CheckNetworkedPropertiesBeingEmpty": false

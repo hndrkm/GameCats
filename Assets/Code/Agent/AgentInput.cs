@@ -176,13 +176,9 @@ namespace CatGame
             if (Object.HasInputAuthority == false)
                 return;
 
-            // Store last render input as a base to current render input.
             _baseRenderInput = _renderInput;
-
-            // Reset input for current frame to default.
             _renderInput = default;
 
-            // Cached input was polled and explicit reset requested.
             if (_resetCachedInput == true)
             {
                 _resetCachedInput = false;
@@ -205,6 +201,8 @@ namespace CatGame
             Vector2 mousePosition = mouse.delta.ReadValue()*0.05f;
 
             moveDirection = Vector2.zero;
+            if (mouse.leftButton.wasPressedThisFrame)
+                _cachedAimDirection = default;
             if (mouse.leftButton.isPressed)
             {
                 aimLocation = mousePosition*Global.RuntimeSettings.AimSensitivity;
@@ -218,9 +216,9 @@ namespace CatGame
                 if (keyboard.dKey.isPressed == true) { moveDirection += Vector2.right; }
             
             if (moveDirection.x ==0 && moveDirection.y ==0)
-                {
-                    moveDirection.Normalize();
-                }
+            {
+                moveDirection.Normalize();
+            }
            
             
             _renderInput.MoveDirection = moveDirection;
@@ -235,10 +233,12 @@ namespace CatGame
 #else
 			_renderInput.ToggleSpeed       = keyboard.leftCtrlKey.isPressed & keyboard.leftAltKey.isPressed & keyboard.backquoteKey.isPressed;
 #endif
+            /*
             if (mouse.leftButton.wasReleasedThisFrame)
             {
                 _cachedAimDirection = default;
             }
+            */
             
             float deltaTime = Time.deltaTime;
             _cachedMoveDirection += moveDirection * deltaTime;
@@ -251,11 +251,19 @@ namespace CatGame
         }
         void IBeforeTick.BeforeTick()
         {
-            
+            if (Object.IsProxy == true || Context == null || Context.GameplayMode == null || Context.GameplayMode.State != GameplayMode.EState.Active)
+            {
+                _fixedInput = default;
+                _renderInput = default;
+                _cachedInput = default;
+                _lastKnownInput = default;
+                _baseFixedInput = default;
+                _baseRenderInput = default;
 
-            
+                return;
+            }
+
             _baseFixedInput = _lastKnownInput;
-
             
             _fixedInput = _lastKnownInput;
 
@@ -277,7 +285,7 @@ namespace CatGame
                 }
                 else
                 {
-                    if (Runner.Stage == SimulationStages.Forward)
+                    if (Runner.Simulation.Stage == SimulationStages.Forward)
                     {
                         ++_missingInputsInRow;
                         ++_missingInputsTotal;

@@ -12,7 +12,7 @@ namespace CatGame
     using UnityScene = UnityEngine.SceneManagement.Scene;
 
     public class NetworkSceneManager : Fusion.Behaviour, INetworkSceneManager, INetworkSceneManagerObjectResolver
-    { 
+    {
         public Base GameplayScene => _gameplayScene;
 
         private NetworkRunner _runner;
@@ -30,7 +30,7 @@ namespace CatGame
         {
             _runner = runner;
             _sceneObjects.Clear();
-            _currentScene = SceneRef.None; 
+            _currentScene = SceneRef.None;
             _gameplayScene = null;
             Log("inicio scene manager");
         }
@@ -64,19 +64,19 @@ namespace CatGame
             _currentScene = SceneRef.None;
             _gameplayScene = null;
         }
-        bool INetworkSceneManager.IsReady(Fusion.NetworkRunner runner) 
+        bool INetworkSceneManager.IsReady(Fusion.NetworkRunner runner)
         {
             if (_loadingInstance == _instanceID)
                 return false;
-            if(_gameplayScene == null||_gameplayScene.ContextReady == false)
+            if (_gameplayScene == null || _gameplayScene.ContextReady == false)
                 return false;
-            if(_currentScene != _runner.CurrentScene)
+            if (_currentScene != _runner.CurrentScene)
                 return false;
             return true;
         }
-        bool INetworkSceneManagerObjectResolver.TryResolveSceneObject(NetworkRunner runner, Guid sceneObjectGuid, out NetworkObject instance) 
+        bool INetworkSceneManagerObjectResolver.TryResolveSceneObject(NetworkRunner runner, Guid sceneObjectGuid, out NetworkObject instance)
         {
-            if (_sceneObjects.TryGetValue(sceneObjectGuid, out instance) == false) 
+            if (_sceneObjects.TryGetValue(sceneObjectGuid, out instance) == false)
             {
                 return false;
             }
@@ -98,17 +98,17 @@ namespace CatGame
                 return;
             _activationScene = null;
             _loadingInstance = _instanceID;
-            _loadingCoroutine = StartCoroutine(SwitchSceneCoroutine(_runner, _currentScene,_runner.CurrentScene));
+            _loadingCoroutine = StartCoroutine(SwitchSceneCoroutine(_runner, _currentScene, _runner.CurrentScene));
         }
-        private IEnumerator SwitchSceneCoroutine(NetworkRunner runner,SceneRef fromScene, SceneRef toScene)
+        private IEnumerator SwitchSceneCoroutine(NetworkRunner runner, SceneRef fromScene, SceneRef toScene)
         {
             _currentScene = SceneRef.None;
             _gameplayScene = null;
 
-            try 
+            try
             {
                 runner.InvokeSceneLoadStart();
-            }catch (Exception ex) 
+            } catch (Exception ex)
             {
                 Debug.LogException(ex);
                 yield break;
@@ -124,7 +124,7 @@ namespace CatGame
                 {
                     loadedScene = activeScene;
                 }
-                else 
+                else
                 {
                     if (TryGetScenePathFromBuildSetting(toScene, out string scenePath) == false)
                     {
@@ -141,7 +141,7 @@ namespace CatGame
                     yield return SceneManager.LoadSceneAsync(scenePath, new LoadSceneParameters(LoadSceneMode.Additive));
                     float timeout = 2.0f;
                     while (timeout > 0.0f && loadedScene.IsValid() == false)
-                    { 
+                    {
                         yield return null;
                         timeout -= Time.unscaledDeltaTime;
                     }
@@ -153,9 +153,9 @@ namespace CatGame
                         yield break;
                     }
                     Log($"Scena Cargada{loadedScene.name}");
-                    SceneManager.SetActiveScene( loadedScene);
+                    SceneManager.SetActiveScene(loadedScene);
                 }
-                FindNetworkObjects(loadedScene,true,false);
+                FindNetworkObjects(loadedScene, true, false);
             }
 
             _currentScene = runner.CurrentScene;
@@ -167,7 +167,7 @@ namespace CatGame
 
             while (_gameplayScene.ContextReady == false && contextTimeout > 0.0f)
             {
-                Log($"Esperando el contexto de escena");    
+                Log($"Esperando el contexto de escena");
                 yield return null;
                 contextTimeout -= Time.unscaledDeltaTime;
             }
@@ -191,7 +191,7 @@ namespace CatGame
                 runner.RegisterSceneObjects(_sceneObjects.Values);
                 runner.InvokeSceneLoadDone();
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Debug.LogException(ex);
                 FinishSceneLoading();
@@ -199,7 +199,7 @@ namespace CatGame
             }
             FinishSceneLoading();
         }
-        private void FindNetworkObjects(UnityScene scene, bool disable, bool addVisibilityNodes) 
+        private void FindNetworkObjects(UnityScene scene, bool disable, bool addVisibilityNodes)
         {
             _sceneObjects.Clear();
             List<NetworkObject> networkObjects = new List<NetworkObject>();
@@ -218,9 +218,9 @@ namespace CatGame
                         }
                     }
                 }
-                if (addVisibilityNodes == true) 
+                if (addVisibilityNodes == true)
                 {
-                    RunnerVisibilityNode.AddVisibilityNodes(rootGameObjects,_runner);
+                    RunnerVisibilityNode.AddVisibilityNodes(rootGameObjects, _runner);
                 }
             }
             if (disable == true)
@@ -231,13 +231,13 @@ namespace CatGame
                 }
             }
         }
-        private void FinishSceneLoading() 
+        private void FinishSceneLoading()
         {
             Log("Carga de Escena finalizada");
             _loadingInstance = default;
             _loadingCoroutine = default;
         }
-
+        [System.Diagnostics.Conditional("ENABLE_LOGS")]
         private void Log(string message)
         {
             Debug.Log($"[{Time.frameCount}] NetworkSceneManager({_instanceID}): {message}");

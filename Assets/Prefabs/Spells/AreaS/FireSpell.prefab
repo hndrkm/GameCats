@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2525097081672726910}
   - component: {fileID: 7896564127213565918}
   - component: {fileID: 1172343840975567484}
+  - component: {fileID: 4764248922889829690}
   m_Layer: 0
   m_Name: FireSpell
   m_TagString: Untagged
@@ -46,17 +47,18 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectInterest: 1
+  ObjectInterest: 0
   DefaultInterestGroups: []
   DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 264449
+  AllowStateAuthorityOverride: 0
+  AoiPositionSource: {fileID: 4764248922889829690}
+  Flags: 2305
   NetworkGuid:
     RawGuidValue: c0a9c09095284d34e84cd4edc7ae273a
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1172343840975567484}
+  - {fileID: 4764248922889829690}
   SimulationBehaviours: []
 --- !u!114 &1172343840975567484
 MonoBehaviour:
@@ -76,7 +78,22 @@ MonoBehaviour:
     MaxDistance: 10
   _castDespawnTime: 2
   _impactDespawnTime: 1
+  _impactEffect: {fileID: 0}
   _areaVisual: {fileID: 5756916325026329600}
+--- !u!114 &4764248922889829690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4656627201301550838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 405c6697e749fbc4196b8f9c8b4c932b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _positionSource: {fileID: 2525097081672726910}
 --- !u!1 &5756916325026329600
 GameObject:
   m_ObjectHideFlags: 0

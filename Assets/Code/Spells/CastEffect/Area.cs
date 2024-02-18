@@ -22,31 +22,29 @@ namespace CatGame
         public PlayerRef InputAuthority => IsPredicted == true ? PredictedInputAuthority : Object.InputAuthority; 
         public abstract void AutoCast(Agent owner, Vector2 position, float distance, LayerMask hitMask,EHitType hitType);
 
-        public void PredictedSpawnFailed()
+        void IPredictedSpawnBehaviour.PredictedSpawnSpawned()
+        {
+            Spawned();
+        }
+        void IPredictedSpawnBehaviour.PredictedSpawnUpdate()
+        {
+            FixedUpdateNetwork();
+        }
+        void IPredictedSpawnBehaviour.PredictedSpawnRender()
+        {
+            Render();
+        }
+        void IPredictedSpawnBehaviour.PredictedSpawnFailed()
         {
             Despawned(Runner,false);
             Runner.Despawn(Object, true);
         }
-
-        public void PredictedSpawnRender()
-        {
-            Render();
-        }
-
-        public void PredictedSpawnSpawned()
-        {
-            Spawned();
-        }
-
         public void PredictedSpawnSuccess()
         {
             //throw new NotImplementedException();
         }
 
-        public void PredictedSpawnUpdate()
-        {
-            FixedUpdateNetwork();
-        }
+        
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
             PredictedInputAuthority = PlayerRef.None;

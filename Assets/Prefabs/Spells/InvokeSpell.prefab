@@ -51,7 +51,7 @@ MonoBehaviour:
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 1
   AoiPositionSource: {fileID: 0}
-  Flags: 264449
+  Flags: 2305
   NetworkGuid:
     RawGuidValue: d5d671ff2e3962a429566c022fc8dd7b
   NestedObjects: []
@@ -71,14 +71,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _IsEquip: 0
+  _Owner: {fileID: 0}
   _spellID: InvokeSpell
   _spellSlot: 1
   _hitType: 1
   _displayName: Invkoke fire
-  _invokeSpell: {fileID: 6724100213958310184, guid: 2d1f7897897b6de439172eb879fa4a35, type: 3}
-  _invokesPerCast: 3
-  _areaDespawnTime: 10
   _reloadTime: 2
+  _instanesPerCast: 1
+  _castOnInputDownOnly: 0
+  _initialEnergy: 0
+  _maxEnergy: 0
+  _hasUnlimitedEnergy: 0
+  _castTrasnform: {fileID: 0}
+  _effectInvoke: {fileID: 0}
+  _areaRadio: 0
+  _minDespawnTime: 1
 --- !u!1 &4880191295994882444
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +161,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.25698647, g: 0.32539886, b: 0.5188679, a: 0.2627451}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -47,6 +47,7 @@ namespace CatGame
 
             request.UserID = Context.PlayerData.UserID;
             request.CustomLobby = _lobbyName;
+            request.SessionName = _lobbyName+Context.PlayerData.Nickname;
 
             Global.Networking.StartGame(request);
         }
@@ -60,6 +61,18 @@ namespace CatGame
                 GameplayType = session.GetGameplayType(),
                 SessionName = session.Name,
                 ScenePath = session.GetMapSetup().ScenePath,
+                CustomLobby = _lobbyName,
+            };
+
+            Global.Networking.StartGame(request);
+        }
+        public void JoinInputSession(string name)
+        {
+            var request = new SessionRequest
+            {
+                UserID = Context.PlayerData.UserID,
+                GameMode = GameMode.Client,
+                SessionName = name,
                 CustomLobby = _lobbyName,
             };
 

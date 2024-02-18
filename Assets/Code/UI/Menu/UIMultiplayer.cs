@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,10 @@ namespace CatGame.UI
         [SerializeField]
         private UISessionInfo _sessionPrefab;
 
+        [SerializeField]
+        private TMP_InputField _inputSessionName;
+        [SerializeField]
+        private TextMeshProUGUI _sessionDetails;
 
         private List<SessionInfo> _sessionInfo = new List<SessionInfo>(32);
         private SessionInfo _selectSession;
@@ -27,6 +32,7 @@ namespace CatGame.UI
             base.OnInitialize();
             _createSessionBtn.onClick.AddListener(OnCreateGameButton);
             _joinSessionBtn.onClick.AddListener(OnJoinButton);
+            
         }
         protected override void OnDeinitialize()
         {
@@ -79,11 +85,13 @@ namespace CatGame.UI
         {
             
         }
-        private void OnJoinButton() 
+        private void OnJoinButton()
         {
-            if (CanJoinSession(_selectSession)==false)
+            if (CanJoinSession(_selectSession) == false)
+            {
+                InputSession();
                 return;
-            
+            }
             Context.Matchmaking.JoinSession(_selectSession);
         }
         private bool CanJoinSession(SessionInfo session) 
@@ -111,7 +119,17 @@ namespace CatGame.UI
         private void SlectSession(int index) 
         {
             _sessionSelectIndex = index;
+            _inputSessionName.text = _sessionInfo[_sessionSelectIndex].Name;
+            _sessionDetails.text = _sessionInfo[_sessionSelectIndex].GetGameplayType().ToString();
             _selectSession = _sessionInfo[_sessionSelectIndex];
+        }
+        private void InputSession() 
+        {
+            if (_inputSessionName.text.Length <= 3)
+            {
+                return;
+            }
+            Context.Matchmaking.JoinInputSession(_inputSessionName.text);
         }
     }
 }

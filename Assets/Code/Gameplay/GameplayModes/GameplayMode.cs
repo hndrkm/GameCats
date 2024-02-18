@@ -13,9 +13,15 @@ namespace CatGame
         public EHitType HitType;
         private byte _flags;
     }
+    public struct RespawnRequest
+    {
+        public PlayerRef PlayerRef;
+        public TickTimer Timer;
+    }
     public enum EGameplayType
     {
         None,
+        Test,
         Versus,
         Elimination,
     }
@@ -59,8 +65,11 @@ namespace CatGame
         [SerializeField]
         private EGameplayType _type;
 
+        private Queue<RespawnRequest> _respawnRequests = new Queue<RespawnRequest>(14);
+
         private List<SpawnPoint> _allSpawnPoints = new List<SpawnPoint>();
         private List<SpawnPoint> _availableSpawnPoints = new List<SpawnPoint>();
+        private DefaultPlayerComparer _playerComparer = new DefaultPlayerComparer();
 
         public void Activate()
         {
@@ -103,6 +112,11 @@ namespace CatGame
             {
                 var respawnTimer = TickTimer.CreateFromSeconds(Runner, respawnTime);
                 victimStatistics.RespawnTimer = respawnTimer;
+                _respawnRequests.Enqueue(new RespawnRequest()
+                {
+                    PlayerRef = victimRef,
+                    Timer = respawnTimer
+                });
 
             }
             else
@@ -130,7 +144,7 @@ namespace CatGame
                 victimPlayer.UpdateStatistics(victimStatistics);
             if (killerPlayer != null && killerPlayer != victimPlayer)
                 killerPlayer.UpdateStatistics(killerStatistics);
-
+            RecalculatePositions();
             var killData = new KillData()
             {
                 KillerRef = killerStatistics.PlayerRef,
@@ -147,7 +161,6 @@ namespace CatGame
         }
         public Transform GetRandomSpawnPoint(float minDistanceFromAgents)
         {
-            Debug.Log(_availableSpawnPoints.SafeCount());
             if (_availableSpawnPoints.SafeCount() == 0)
                 return null;
 
@@ -199,7 +212,7 @@ namespace CatGame
             {
                 TrySpawnAgent(player);
             }
-
+            RecalculatePositions();
             RPC_PlayerJoinedGame(player.Object.InputAuthority);
         }
         public void PlayerLeft(Player player)
@@ -210,7 +223,7 @@ namespace CatGame
                 return;
 
             player.DespawnAgent();
-
+            RecalculatePositions();
             RPC_PlayerLeftGame(player.Object.InputAuthority, player.Nickname);
 
             CheckWinCondition();
@@ -237,8 +250,8 @@ namespace CatGame
             }
             switch (State)
             {
-                case EState.Active: break;
-                case EState.Finished: break;
+                case EState.Active: FixedUpdateNetwork_Active();break;
+                case EState.Finished:FixedUpdateNetwork_Finished(); break;
             }
         }
 
@@ -253,13 +266,17 @@ namespace CatGame
             SpawnAgent(player.Object.InputAuthority, spawnPosition, spawnRotation);
         }
         protected virtual void AgentDeath(ref PlayerStatistics victimStatistic, ref PlayerStatistics killerStatistics) { }
-        protected void CheckWinCondition() { }
+        protected virtual void CheckWinCondition() { }
         protected virtual float GetRespawnTime(PlayerStatistics playerStatistics)
         {
             return RespawnTime;
         }
         protected virtual void PreparePlayerStatistics(ref PlayerStatistics playerStatistics)
         {
+        }
+        protected virtual void SortPlayers(List<PlayerStatistics> allStatistics)
+        {
+            allStatistics.Sort(_playerComparer);
         }
         protected Agent SpawnAgent(PlayerRef playerRef, Vector3 position, Quaternion rotation)
         {
@@ -299,12 +316,57 @@ namespace CatGame
 
         private void FixedUpdateNetwork_Active() 
         {
+            while (_respawnRequests.Count > 0)
+            {
+                var respawnRequest = _respawnRequests.Peek();
+                if (respawnRequest.Timer.Expired(Runner) == false)
+                    return;
+                _respawnRequests.Dequeue();
+                Respawn(respawnRequest.PlayerRef);
+            }
+
             if(_endTimer.Expired(Runner) == true)
                 FinishGamePlay();
         }
         private void FixedUpdateNetwork_Finished()
         {
             
+        }
+        private void Respawn(PlayerRef playerRef) 
+        {
+            var player = Context.NetworkGame.GetPlayer(playerRef);
+            if (player == null)
+                return;
+            player.DespawnAgent();
+            TrySpawnAgent(player);
+        }
+        private void RecalculatePositions() 
+        {
+            var allStatistics = ListPool.Get<PlayerStatistics>(MAX_PLAYERS);
+
+            foreach (var player in Context.NetworkGame.Players)
+            {
+                if (player == null)
+                    continue;
+
+                var statistics = player.Statistics;
+                if (statistics.IsValid == false)
+                    continue;
+
+                allStatistics.Add(statistics);
+            }
+
+            SortPlayers(allStatistics);
+
+            for (int i = 0; i < allStatistics.Count; i++)
+            {
+                var statistics = allStatistics[i];
+
+                statistics.Position = (byte)(i + 1);
+                Context.NetworkGame.GetPlayer(statistics.PlayerRef).UpdateStatistics(statistics);
+            }
+
+            ListPool.Return(allStatistics);
         }
         private void StopGameRutine() 
         {

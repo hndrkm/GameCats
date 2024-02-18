@@ -8,6 +8,7 @@ namespace CatGame
 {
     public class EffectInvoke : Area
     {
+        public float CastDespawnTime => _castDespawnTime;
         [SerializeField]
         private float _damage;
         [SerializeField]
@@ -16,6 +17,7 @@ namespace CatGame
         private GameObject _invokeVisual;
         [SerializeField]
         private float _castDespawnTime = 2f;
+
         [SerializeField]
         private float _impactDespawnTime = 1f;
         private InvokeData _data { get; set; }

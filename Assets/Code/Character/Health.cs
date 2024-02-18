@@ -9,9 +9,9 @@ namespace CatGame
     {
         public EHitAction Action;
         public float Damage;
-        [Networked]
+        [Networked,Accuracy(0.01f)]
         public Vector2 RelativePosition { get; set; }
-        [Networked]
+        [Networked, Accuracy(0.01f)]
         public Vector2 Direction { get; set; }
         public PlayerRef Instigator;
     }
@@ -22,13 +22,14 @@ namespace CatGame
 
         [Networked, HideInInspector]
         public float CurrentHealth { get; private set; }
-        [SerializeField]
-        private Transform _hitIndicatorPivot;
+
 
         public event Action<HitData> HitTaken;
         public event Action<HitData> HitPerformed;
         [SerializeField]
         private float _maxHealth;
+        [SerializeField]
+        private Transform _hitIndicatorPivot;
 
         [Header("Regeneration")]
         [SerializeField]
@@ -76,6 +77,10 @@ namespace CatGame
                 AddHealth(Mathf.Min(healthDiff, _healthRegenPerTick));
             }
         }
+        protected void Awake()
+        {
+            _agent = GetComponent<Agent>();
+        }
         Transform IHitTarget.HitPivot => _hitIndicatorPivot != null ? _hitIndicatorPivot : transform;
         void IHitTarget.ProcessHit(ref HitData hitData)
         {
@@ -91,6 +96,13 @@ namespace CatGame
             {
                 hitData.IsFatal = true;
                 Context.GameplayMode.AgentDeath(_agent, hitData);
+            }
+        }
+        void IHitInstigator.HitPerformed(HitData hitData)
+        {
+            if (hitData.Amount > 0 && hitData.Target != (IHitTarget)this && Runner.IsResimulation == false)
+            {
+                HitPerformed?.Invoke(hitData);
             }
         }
         private void ApplyHit(ref HitData hit)
@@ -132,21 +144,13 @@ namespace CatGame
             int hitIndex = _hitCount % _hitData.Length;
             _hitData.Set(hitIndex, bodyHitData);
         }
-
-        void IHitInstigator.HitPerformed(HitData hitData)
-        {
-            if (hitData.Amount > 0 && hitData.Target != (IHitTarget)this && Runner.IsResimulation == false)
-            {
-                HitPerformed?.Invoke(hitData);
-            }
-        }
         private float ApplyDamage(float damage)
         {
             if (damage <= 0f)
                 return 0f;
 
             ResetRegenDelay();
-
+            Debug.Log(damage);
             var healthChange = AddHealth(-(damage ));
 
             return -(healthChange);

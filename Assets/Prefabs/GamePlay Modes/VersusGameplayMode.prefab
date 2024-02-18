@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7745193309491068380
+--- !u!1 &6384974959939093793
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2094480950030733295}
-  - component: {fileID: 4717718432826213596}
-  - component: {fileID: 8768041769986045018}
+  - component: {fileID: 608072147678777536}
+  - component: {fileID: 1137275419076371234}
+  - component: {fileID: 6871891165956715104}
   m_Layer: 0
-  m_Name: Gameplaymode
+  m_Name: VersusGameplayMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2094480950030733295
+--- !u!4 &608072147678777536
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745193309491068380}
+  m_GameObject: {fileID: 6384974959939093793}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,13 +33,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4717718432826213596
+--- !u!114 &1137275419076371234
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745193309491068380}
+  m_GameObject: {fileID: 6384974959939093793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d434a9109dd18674394f49c63f1efb10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  GameplayName: Versus
+  MaxPlayers: 2
+  ScorePerKill: 10
+  ScorePerDeath: 0
+  RespawnTime: 1
+  TimeLimit: 300
+  _State: 0
+  _type: 2
+  ScoreLimit: 30
+  _delayStart: 5
+  _waitForPlayersTime: 30
+--- !u!114 &6871891165956715104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6384974959939093793}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
@@ -50,29 +74,10 @@ MonoBehaviour:
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 1
   AoiPositionSource: {fileID: 0}
-  Flags: 264449
+  Flags: 2305
   NetworkGuid:
-    RawGuidValue: 27c5ad47804dcdb4ebaea8b2d210774a
+    RawGuidValue: 9e56c17593faed14e8c29adc195e065f
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 8768041769986045018}
+  - {fileID: 1137275419076371234}
   SimulationBehaviours: []
---- !u!114 &8768041769986045018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7745193309491068380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d6bb738ad54a648bdcaefec892d84d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  GameplayName: Versus
-  MaxPlayers: 2
-  ScorePerKill: 1
-  ScorePerDeath: -1
-  TimeLimit: 500
-  _type: 1

@@ -283,6 +283,14 @@ PrefabInstance:
       propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
       value: 3606147232708722570
       objectReference: {fileID: 0}
+    - target: {fileID: 8722673887336733902, guid: 3a8fa492268fbca4aa0be1d40caaa084, type: 3}
+      propertyPath: _modePrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8722673887336733902, guid: 3a8fa492268fbca4aa0be1d40caaa084, type: 3}
+      propertyPath: _modePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1137275419076371234, guid: 9e56c17593faed14e8c29adc195e065f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

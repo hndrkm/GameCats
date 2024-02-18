@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,6 +10,16 @@ namespace CatGame.UI
     public class UICreateSession : UICloseView
     {
         [SerializeField]
+        private UIMapList _maps;
+        [SerializeField]
+        private TextMeshProUGUI _displayMapName;
+        [SerializeField]
+        private TextMeshProUGUI _descripcionMap;
+        [SerializeField]
+        private TextMeshProUGUI _recomendedPlayers;
+
+
+        [SerializeField]
         private TMP_InputField _gameName;
         [SerializeField]
         private TMP_Dropdown _gameplay;
@@ -17,29 +28,44 @@ namespace CatGame.UI
         [SerializeField]
         private Button _createBtn;
         [SerializeField]
-        private TMP_Dropdown _mapSelection;
+        private Toggle _privateToggle;
 
-        private List<MapSetup> _mapSetup = new List<MapSetup>(8);
+        private List<MapSetup> _mapSetups = new List<MapSetup>(8);
+        private bool _uiPrepared;
         protected override void OnInitialize()
         {
             base.OnInitialize();
+            _maps.UpdateContent += OnUpdateMapContent;
+            _maps.SelectionChanged += OnMapSelectionChanged;
             _createBtn.onClick.AddListener(OnCreateButton);
             PrepareMapData();
         }
         protected override void OnDeinitialize()
         {
+            _maps.UpdateContent -= OnUpdateMapContent;
+            _maps.SelectionChanged -= OnMapSelectionChanged;
             _createBtn.onClick.RemoveListener(OnCreateButton);
             base.OnDeinitialize();
         }
         protected override void OnOpen()
         {
             base.OnOpen();
-            UpdateDropDowns();
-            if (_gameName.text.Length <5)
+            if (_uiPrepared == false)
             {
-                _gameName.text = $"{Context.PlayerData.Nickname}Game";
-                _maxPlayers.text = 2.ToString();
+                UpdateDropDowns();
+                _maps.Refresh(_mapSetups.Count);
+                _maps.Selection = 0;
+                OnMapSelectionChanged(0);
+
+                if (_gameName.text.Length < 5)
+                {
+                    _gameName.text = $"{Context.PlayerData.Nickname}Game";
+                    _maxPlayers.text = 2.ToString();
+                }
+                _uiPrepared = true;
             }
+            
+            
         }
         private void OnCreateButton() 
         {
@@ -49,7 +75,8 @@ namespace CatGame.UI
                 GameMode = Fusion.GameMode.Host,
                 MaxPlayers = System.Int32.Parse(_maxPlayers.text),
                 GameplayType = (EGameplayType)(_gameplay.value + 1),
-                ScenePath = _mapSetup[0].ScenePath,
+                ScenePath = _mapSetups[_maps.Selection].ScenePath,
+                isPrivate = _privateToggle.isOn,
             };
             Context.Matchmaking.CreateSession(request);
         }
@@ -60,13 +87,24 @@ namespace CatGame.UI
         }
         private bool CanCreateGame()
         {
-            if(_gameName.text.Length < 5)
+            if (_maps.Selection < 0)
+                return false;
+            var mapSetup = _mapSetups[_maps.Selection];
+            if (mapSetup == null)
+                return false;
+            if (System.Int32.TryParse(_maxPlayers.text, out int maxPlayers) == false)
+                return false;
+
+            if (maxPlayers < 2 || maxPlayers > mapSetup.MaxPlayers)
+                return false;
+            if (_gameName.text.Length < 5)
                 return false;
             return true;
         }
         private void UpdateDropDowns() 
         {
             var options = ListPool.Get<string>(16);
+            var defaultOption = 0;
             int i = 0;
             foreach (EGameplayType value in System.Enum.GetValues(typeof(EGameplayType)))
             {
@@ -77,27 +115,39 @@ namespace CatGame.UI
             }
             _gameplay.ClearOptions();
             _gameplay.AddOptions(options);
+            _gameplay.SetValueWithoutNotify(defaultOption);
             ListPool.Return(options);
+        }
+        private void OnMapSelectionChanged(int index) 
+        {
+            if (index >= 0)
+            {
+                var mapSetup = _mapSetups[index];
+
+                _displayMapName.text=(mapSetup.DisplayName);
+                _descripcionMap.text=(mapSetup.Description);
+                _recomendedPlayers.text = mapSetup.RecommendedPlayers.ToString();
+
+                _maxPlayers.text = mapSetup.RecommendedPlayers.ToString();
+            }
+            
+        }
+        private void OnUpdateMapContent(int index, UIMapItem content) 
+        {
+            content.SetData(_mapSetups[index]);
         }
         private void PrepareMapData() 
         {
-            _mapSetup.Clear();
+            _mapSetups.Clear();
             var allMapSetups = Context.Settings.Map.Maps;
             for (int i = 0; i < allMapSetups.Length; i++)
             {
                 var mapSetup = allMapSetups[i];
                 if (mapSetup.ShowInMapSelection == true)
                 {
-                    _mapSetup.Add(mapSetup);
+                    _mapSetups.Add(mapSetup);
                 }
             }
-            List<string> optionsDatas = new List<string>(8);
-            for (int i = 0; i < _mapSetup.Count; i++)
-            {
-                optionsDatas.Add(_mapSetup[i].DisplayName);
-            }
-            _mapSelection.ClearOptions();
-            _mapSelection.AddOptions(optionsDatas);
         }
     }
 }

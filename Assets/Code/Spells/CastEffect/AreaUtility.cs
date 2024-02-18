@@ -11,18 +11,18 @@ namespace CatGame
         {
             return AreaCast();
         }
-        public static bool AreaCast(NetworkRunner runner,PlayerRef owner, int ownerObjectInstanceID, Vector2 castPosition, float areaEffect, LayerMask hitMask, List<LagCompensatedHit> validHits) 
+        public static bool AreaCast(NetworkRunner runner,PlayerRef owner, int ownerObjectInstanceID, Vector2 castPosition, float areaRadio, LayerMask hitMask, List<LagCompensatedHit> validHits) 
         {
             validHits.Clear();
             var hits = ListPool.Get<LagCompensatedHit>(16);
-            runner.LagCompensation.OverlapSphere(castPosition, areaEffect, owner, hits, hitMask,HitOptions.SubtickAccuracy);
+            int hitCount = runner.LagCompensation.OverlapSphere(castPosition, areaRadio, owner, hits, hitMask,HitOptions.SubtickAccuracy);
             if (hits.Count <= 0) 
             {
                 ListPool.Return(hits);
                 return false;
             }
             var hitRoots = ListPool.Get<int>(16);
-            
+            Sort(hits, hitCount);
             for (int i = 0;i<hits.Count;i++) 
             {
                 var hit = hits[i];
@@ -42,6 +42,29 @@ namespace CatGame
             return validHits.Count > 0;
         }
 
-
+        public static void Sort(List<LagCompensatedHit> hits, int maxHits) 
+        {
+            while (true)
+            {
+                bool swap = false;
+                for (int i = 0; i < maxHits; i++)
+                {
+                    for (int j = i+1; j < maxHits; j++) 
+                    {
+                        if (hits[j].Distance < hits[i].Distance)
+                        {
+                            LagCompensatedHit hit = hits[i];
+                            hits[i] = hits[j];
+                            hits[j] = hit;
+                            swap = true;
+                        }
+                    }
+                }
+                if (swap == false)
+                {
+                    return;
+                }
+            }
+        }
     }
 }

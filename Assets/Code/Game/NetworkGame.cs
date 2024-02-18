@@ -131,7 +131,7 @@ namespace CatGame
         {
             if (playerRef.IsValid == false) 
                 return;
-            if (Runner.IsServer ==false) 
+            if (Runner.IsServer == false) 
                 return;
             if (_isActive == false) 
                 return;

@@ -46,7 +46,7 @@ namespace CatGame
         {
             if (Context.Runner != null)
             {
-                //Context.Runner.SetVisible(Context.IsVisible);
+                Context.Runner.IsVisible = Context.IsVisible;
             }
             base.OnTick();
         }

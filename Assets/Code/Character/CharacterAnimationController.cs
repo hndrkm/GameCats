@@ -15,15 +15,21 @@ namespace CatGame
         {
             //animator = tryGetComponent<Animator>();
             agent = GetComponent<Agent>();
+            agent.Health.HitTaken += AnimationTakeDamage;
+        }
+        private void AnimationTakeDamage(HitData data)
+        { 
+            animator.SetTrigger("Herido");
         }
         private void LateUpdate()
         {
-            if (agent.Character.CharacteController.Velocity.x < -0.1f)
+            if (agent.Character.CharacteController.VelocityT.x < -0.1f)
                 _renderer.flipX = true;
-            else if (agent.Character.CharacteController.Velocity.x > 0.1f)
+            else if (agent.Character.CharacteController.VelocityT.x > 0.1f)
                 _renderer.flipX = false;
-
-            animator.SetFloat("vel",agent.Character.CharacteController.Velocity.magnitude);
+            if (animator == null)
+                return;
+            animator.SetFloat("vel",agent.Character.CharacteController.VelocityT.magnitude);
         }
     }
 }

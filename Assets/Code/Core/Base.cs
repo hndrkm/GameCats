@@ -60,7 +60,6 @@ namespace CatGame
 
         public void PrepareContext()
         {
-            
             OnPrepareContext(_context);
         }
 

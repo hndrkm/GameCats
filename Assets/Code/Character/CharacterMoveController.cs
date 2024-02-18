@@ -5,22 +5,16 @@ using UnityEngine.InputSystem.XR;
 
 namespace CatGame
 {
-    public class CharacterMoveController : NetworkBehaviour
+    public class CharacterMoveController : NetworkCharacterControllerPrototype
     {
         [SerializeField] private LayerMask _wallLayer;
-        //public Collider2D Collider => _characterController;
-        private CharacterController _characterController;
-        public float acceleration = 10f;
-        public float braking = 10f;
-        public float maxSpeed= 2f;
-        public float rotationSpeed = 15f;
+  
+        public float _Macceleration = 10f;
+        public float _Mbraking = 10f;
+        public float _MmaxSpeed= 2f;
+        public float _MrotationSpeed = 15f;
         [Networked]
-        public Vector2 Velocity { get; set; }
-
-        private void Awake()
-        {
-            _characterController = GetComponent<CharacterController>();
-        }
+        public Vector2 VelocityT { get; set; }
         public override void FixedUpdateNetwork()
         {
 
@@ -30,18 +24,18 @@ namespace CatGame
         {
             var deltaTime = Runner.DeltaTime;
             var previusPos = transform.position;
-            var moveVelocity = Velocity;
+            var moveVelocity = VelocityT;
 
             if (direction == default)
             {
-                moveVelocity = Vector2.Lerp(moveVelocity, default, braking * deltaTime);
+                moveVelocity = Vector2.Lerp(moveVelocity, default, _Mbraking * deltaTime);
             }
             else 
             {
-                moveVelocity = Vector2.ClampMagnitude(moveVelocity + direction*acceleration*deltaTime, maxSpeed);
+                moveVelocity = Vector2.ClampMagnitude(moveVelocity + direction*_Macceleration*deltaTime, _MmaxSpeed);
             }
-            _characterController.Move(moveVelocity*deltaTime);
-            Velocity = (transform.position - previusPos)*Runner.Config.Simulation.TickRate;
+            Controller.Move(moveVelocity*deltaTime);
+            VelocityT = (transform.position - previusPos)*Runner.Config.Simulation.TickRate;
         }
 
     }

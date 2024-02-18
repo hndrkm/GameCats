@@ -13,11 +13,19 @@ MonoBehaviour:
   m_Name: MapSettings
   m_EditorClassIdentifier: 
   _maps:
-  - _id: Map.Game
+  - _id: Map.Game1
     _scenePath: Scenes/Game
-    _displayName: Game
-    _description: un mapa de prueba
-    _image: {fileID: 0}
+    _displayName: Simple Map
+    _description: un mapa simple de prueba
+    _image: {fileID: 21300000, guid: 6fecef7bbdbd51e438b636d503c4a0c9, type: 3}
     _recommendedPlayers: 2
     _maxPlayers: 2
+    _showInMapSelection: 1
+  - _id: Map.Game2
+    _scenePath: Scenes/Game1
+    _displayName: Demo Map
+    _description: un mapa de prueba
+    _image: {fileID: 21300000, guid: 1593e3fb44b736c4d898ad508c6a38c3, type: 3}
+    _recommendedPlayers: 4
+    _maxPlayers: 4
     _showInMapSelection: 1

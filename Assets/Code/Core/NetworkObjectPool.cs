@@ -49,7 +49,7 @@ namespace CatGame
                     _borrowed.Remove(instance);
                     _cached[prefabID].Push(instance);
 
-                    if (instance == null)
+                    if (instance != null)
                     {
                         instance.gameObject.SetActive(false);
                         instance.transform.parent = null;

@@ -51,7 +51,7 @@ MonoBehaviour:
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 1
   AoiPositionSource: {fileID: 0}
-  Flags: 264449
+  Flags: 2305
   NetworkGuid:
     RawGuidValue: 0a25271e8d24f0240aa3496a22cb16df
   NestedObjects: []
@@ -71,17 +71,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _IsEquip: 0
+  _Owner: {fileID: 0}
   _spellID: Fire.Spell_0
   _spellSlot: 0
   _hitType: 1
   _displayName: Bola de fuego
-  _areaSpell: {fileID: 1172343840975567484, guid: c0a9c09095284d34e84cd4edc7ae273a, type: 3}
-  _areaEffect: 2
-  _areaDespawnTime: 0.5
   _reloadTime: 2
-  _castOnKeyDownOnly: 0
-  _areasPerCast: 1
-  _initialEnergy: 1
+  _instanesPerCast: 1
+  _castOnInputDownOnly: 0
+  _initialEnergy: 2
+  _maxEnergy: 2
+  _hasUnlimitedEnergy: 1
+  _castTrasnform: {fileID: 0}
+  _effectArea: {fileID: 4116242433311732944, guid: 934ec20aab0dc27478439be2572e6b8c, type: 3}
 --- !u!1 &5501706878705361306
 GameObject:
   m_ObjectHideFlags: 0
