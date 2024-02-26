@@ -15,14 +15,13 @@ namespace CatGame
         public Vector2 Direction { get; set; }
         public PlayerRef Instigator;
     }
-    public class Health : ContextBehaviour,IHitTarget,IHitInstigator
+    public class Health : ContextBehaviour, IHitTarget, IHitInstigator
     {
         public bool IsAlive => CurrentHealth > 0f;
-        public float MaxHealth => _maxHealth;
+        public float MaxHealth => GetMaxHealth();
 
         [Networked, HideInInspector]
         public float CurrentHealth { get; private set; }
-
 
         public event Action<HitData> HitTaken;
         public event Action<HitData> HitPerformed;
@@ -52,9 +51,19 @@ namespace CatGame
         private TickTimer _regenTickTimer;
         private float _healthRegenPerTick;
         private float _regenTickTime;
+        private float GetHealthRegen() 
+        {
+            return _healthRegenPerSecond + _agent.Powerups.CharacterStats.HealthRegen;
+        }
+        private float GetMaxHealth() 
+        {
+            return _maxHealth + _agent.Powerups.CharacterStats.ExtraHealth;
+        }
         public void OnSpawned(Agent agent)
         {
             _visibleHitCount = _hitCount;
+            _regenTickTime = 1f / _regenTickPerSecond;
+            _healthRegenPerTick = GetHealthRegen() / _regenTickPerSecond;
         }
         public void OnDespawned()
         {
@@ -66,20 +75,21 @@ namespace CatGame
             if (Object.HasStateAuthority == false)
                 return;
 
-            if (IsAlive == true && _healthRegenPerSecond > 0f && _regenTickTimer.ExpiredOrNotRunning(Runner) == true)
+            if (IsAlive == true && GetHealthRegen() > 0f && _regenTickTimer.ExpiredOrNotRunning(Runner) == true)
             {
                 _regenTickTimer = TickTimer.CreateFromSeconds(Runner, _regenTickTime);
 
                 var healthDiff = _maxHealthFromRegen - CurrentHealth;
                 if (healthDiff <= 0f)
                     return;
-
+                _healthRegenPerTick = GetHealthRegen() / _regenTickPerSecond;
                 AddHealth(Mathf.Min(healthDiff, _healthRegenPerTick));
             }
         }
         protected void Awake()
         {
             _agent = GetComponent<Agent>();
+            
         }
         Transform IHitTarget.HitPivot => _hitIndicatorPivot != null ? _hitIndicatorPivot : transform;
         void IHitTarget.ProcessHit(ref HitData hitData)
@@ -102,6 +112,7 @@ namespace CatGame
         {
             if (hitData.Amount > 0 && hitData.Target != (IHitTarget)this && Runner.IsResimulation == false)
             {
+                _agent.Powerups.AddEnergy();
                 HitPerformed?.Invoke(hitData);
             }
         }
@@ -112,13 +123,14 @@ namespace CatGame
 
             if (hit.Action == EHitAction.Damage)
             {
+
                 hit.Amount = ApplyDamage(hit.Amount);
             }
             else if (hit.Action == EHitAction.Heal)
             {
                 hit.Amount = AddHealth(hit.Amount);
             }
-           
+
 
             if (hit.Amount <= 0)
                 return;
@@ -150,8 +162,7 @@ namespace CatGame
                 return 0f;
 
             ResetRegenDelay();
-            Debug.Log(damage);
-            var healthChange = AddHealth(-(damage ));
+            var healthChange = AddHealth(-(damage));
 
             return -(healthChange);
         }
@@ -167,8 +178,6 @@ namespace CatGame
 
             CurrentHealth = _maxHealth;
         }
-
-
         private float AddHealth(float health)
         {
             float previousHealth = CurrentHealth;
@@ -177,8 +186,14 @@ namespace CatGame
         }
         private void SetHealth(float health)
         {
-            CurrentHealth = Mathf.Clamp(health, 0, _maxHealth);
+            CurrentHealth = Mathf.Clamp(health, 0, GetMaxHealth());
         }
+        [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority | RpcTargets.Proxies, Channel = RpcChannel.Reliable)]
+        private void RPC_SetMaxHealth(float health) 
+        {
+            _maxHealth = health;
+        }
+
         [ContextMenu("sumar Health")]
         private void Debug_AddHealth()
         {

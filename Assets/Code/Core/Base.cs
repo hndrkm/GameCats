@@ -15,14 +15,12 @@ namespace CatGame
         public PlayerData PlayerData;
 
         public BaseUI UI;
-
         public NetworkGame NetworkGame;
 
         [HideInInspector]
         public GlobalSettings Settings;
         [HideInInspector]
         public RuntimeSettings RuntimeSettings;
-
 
         [HideInInspector]
         public bool IsVisible;

@@ -20,7 +20,7 @@ namespace CatGame
         public PlayerRef PredictedInputAuthority { get; set; }
         public bool IsPredicted => Object == null || Object.IsPredictedSpawn;
         public PlayerRef InputAuthority => IsPredicted == true ? PredictedInputAuthority : Object.InputAuthority; 
-        public abstract void AutoCast(Agent owner, Vector2 position, float distance, LayerMask hitMask,EHitType hitType);
+        public abstract void AutoCast(Agent owner, Vector2 position, float speed, LayerMask hitMask,EHitType hitType);
 
         void IPredictedSpawnBehaviour.PredictedSpawnSpawned()
         {

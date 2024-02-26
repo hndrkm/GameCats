@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using System;
 
 namespace CatGame
 {
+    [Serializable]
     public struct PlayerStatistics : INetworkStruct
     { 
         public PlayerRef PlayerRef;
@@ -29,10 +31,12 @@ namespace CatGame
         public string Nickname { get; private set; }
         [Networked]
         public PlayerStatistics Statistics { get; private set; }
-        [Networked]
-        public Agent ActiveAgent { get; private set; }
         [Networked(OnChanged = nameof(OnActiveAgentChanged), OnChangedTargets = OnChangedTargets.InputAuthority)]
+        public Agent ActiveAgent { get; private set; }
+        [Networked]
         public NetworkPrefabId AgentPrefabID { get; set; }
+        [Networked]
+        public NetworkBool IsReady { get; set; }
 
         private PlayerRef _observedPlayer;
 
@@ -53,6 +57,15 @@ namespace CatGame
                 ActiveAgent = null;
             }
         }
+        public void UpdateAgentID(NetworkPrefabId id) 
+        {
+            RPC_ChangeAgent(id);
+        }
+        public void UpdateReady(bool ready)
+        {
+            RPC_ChangeReady(ready);
+        }
+
         public void UpdateStatistics(PlayerStatistics statistics)
         {
             Statistics = statistics;
@@ -76,6 +89,7 @@ namespace CatGame
                 Context.LocalPlayerRef = _observedPlayer;
             }
             IsInitialized = false;
+            IsReady = false;
         }
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
@@ -103,6 +117,7 @@ namespace CatGame
                 Context.ObservedPlayerRef = observedAgent != null ? observedAgent.Object.InputAuthority : Object.InputAuthority;
                 Context.LocalPlayerRef = Object.InputAuthority;
             }
+            
             if (IsInitialized == false && Object.HasInputAuthority == true && Runner.Stage == SimulationStages.Forward && Context.PlayerData != null)
             {
                 RPC_Initialize(Context.PeerUserID, Context.PlayerData.Nickname, Context.PlayerData.AgentPrefabID);
@@ -119,6 +134,17 @@ namespace CatGame
             Nickname = nickname;
             AgentPrefabID = agentPrefabID;
             IsInitialized = true;
+        }
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable, InvokeLocal = true)]
+        public void RPC_ChangeAgent(NetworkPrefabId agentPrefabID)
+        {
+            Debug.Log(agentPrefabID);
+            AgentPrefabID = agentPrefabID;
+        }
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable, InvokeLocal = true)]
+        public void RPC_ChangeReady(bool ready)
+        {
+            IsReady = ready;
         }
         [Rpc(RpcSources.StateAuthority | RpcSources.InputAuthority, RpcTargets.StateAuthority | RpcTargets.InputAuthority, Channel = RpcChannel.Reliable)]
         private void RPC_SetObservedPlayer(PlayerRef player) 

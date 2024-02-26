@@ -10,25 +10,31 @@ namespace CatGame
     {
         public bool IsLocal => Object != null && Object.HasInputAuthority == true;
         public bool IsObserved => Context != null && Context.ObservedAgent == this;
-
+        public bool IsProAgent => _proAgent;
         public AgentInput AgentInput => _agentInput;
         public Character Character => _character;
         public Spells Spells => _spells;
         public Health Health => _health;
+        public Powerups Powerups => _powerups;
 
-
-
+        [SerializeField]
+        private bool _proAgent = false;
         [SerializeField]
         private GameObject _visualRoot;
         [SerializeField]
         private TextMeshPro _textNickname;
         [SerializeField]
         private TextMeshPro _textHealth;
+        [SerializeField]
+        private TextMeshPro _textEnergy;
+        [SerializeField]
+        private TextMeshPro _textEnergySpellSuper;
 
         private AgentInput _agentInput;
         private Character _character;
         private Spells _spells;
         private Health _health;
+        private Powerups _powerups;
         private NetworkCulling _networkCulling;
 
         public override void Spawned()
@@ -44,7 +50,8 @@ namespace CatGame
             _textNickname.text=Context.NetworkGame.GetPlayer(Object.InputAuthority).Nickname;
             
             _visualRoot.SetActive(true);
-            
+
+            _powerups.OnSpawned(this);
             _character.OnSpawned(this);
             _spells.OnSpawned();
             _health.OnSpawned(this);
@@ -60,7 +67,10 @@ namespace CatGame
             {
                 _health.OnDespawned();
             }
-            
+            if (_powerups != null)
+            {
+                _powerups.OnDespawned();
+            }
             var earlyAgentController = GetComponent<EarlyAgentController>();
             earlyAgentController.SetDelegates(null, null);
 
@@ -78,10 +88,11 @@ namespace CatGame
         }
         private void Awake()
         {
-            _agentInput = GetComponent<AgentInput>();
             _character = GetComponent<Character>();
+            _agentInput = GetComponent<AgentInput>();
             _spells = GetComponent<Spells>();
             _health = GetComponent<Health>();
+            _powerups = GetComponent<Powerups>();
             _networkCulling = GetComponent<NetworkCulling>();
 
             _networkCulling.Updated += OnCullingUpdated;
@@ -95,7 +106,7 @@ namespace CatGame
             Profiler.BeginSample(nameof(Agent));
             
             ProcessFixedInput();
-
+            _powerups.OnFixdedUpdate();
             _spells.OnFixedUpdate();
             _character.OnFixedUpdate();
             
@@ -131,8 +142,12 @@ namespace CatGame
         }
         private void OnLateRender()
         {
-            if(Health != null)
+            if (Health != null) 
+            {
                 _textHealth.text = Health.CurrentHealth.ToString();
+                _textEnergy.text = Powerups.Energy.ToString();
+            }
+            
             if (_networkCulling.IsCulled == true)
                 return;
         }
@@ -151,8 +166,11 @@ namespace CatGame
             }
             if (input.Aim == true)
             {
-                _spells.Aim();
                 input.Aim &= CanAin();
+            }
+            if (input.Aim == true)
+            {
+                _spells.Aim();
             }
             cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
 
@@ -181,7 +199,7 @@ namespace CatGame
             {
                 input.Aim &= CanAin();
             }
-            cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
+            //cmc.MoveCharacter(input.MoveDirection == Vector2.zero ? Vector2.zero : input.MoveDirection);
 
         }
         private void OnCullingUpdated(bool isCulled) 

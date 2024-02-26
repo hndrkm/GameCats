@@ -55,7 +55,7 @@ MonoBehaviour:
   _State: 0
   _type: 2
   ScoreLimit: 30
-  _delayStart: 5
+  _delayStart: 3
   _waitForPlayersTime: 30
 --- !u!114 &6871891165956715104
 MonoBehaviour:

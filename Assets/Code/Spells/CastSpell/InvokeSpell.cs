@@ -6,12 +6,14 @@ using UnityEngine;
 
 namespace CatGame
 {
-    public class InvokeSpell : CastSpell
+    public class InvokeSpell : BaseSpell
     {
         [SerializeField]
-        private EffectInvoke _effectInvoke;
+        private InvokeArea _effectInvoke;
         [SerializeField]
-        private float _areaRadio;
+        private float _speed;
+        [SerializeField]
+        private float _radius;
         [SerializeField]
         private float _minDespawnTime = 1;
 
@@ -27,11 +29,11 @@ namespace CatGame
                 Byte2 = (byte)Object.Id.Raw,
             };
 
-            var area = Runner.Spawn(_effectInvoke, targetPosition, Quaternion.identity, Object.InputAuthority, BeforeAreaSpawned, predictionKey);
+            var area = Runner.Spawn(_effectInvoke, castPosition , Quaternion.identity, Object.InputAuthority, BeforeAreaSpawned, predictionKey);
 
             if (area == null)
                 return true;
-            area.AutoCast(Owner, targetPosition, _areaRadio, hitMask, HitType);
+            area.AutoCast(Owner, castPosition, _speed, hitMask, HitType);
             area.SetDespawnCooldown(Mathf.Min(_minDespawnTime, area.CastDespawnTime));
 
             void BeforeAreaSpawned(NetworkRunner runner, NetworkObject spawnedObject)
@@ -42,6 +44,14 @@ namespace CatGame
                 area.PredictedInputAuthority = Object.InputAuthority;
             }
             return true;
+        }
+        protected override Vector2 GetCastPosition(int dispersion, int i)
+        {
+            var posOwner2d = new Vector2(Owner.transform.position.x, Owner.transform.position.y);
+            var X = Mathf.Cos(dispersion * i * 10) * _radius;
+            var Y = Mathf.Sin(dispersion * i * 10) * _radius;
+            Debug.Log($"x {Mathf.Cos(dispersion * i)} y {Mathf.Sin(dispersion * i)}");
+            return posOwner2d + new Vector2(X, Y);
         }
     }
 }

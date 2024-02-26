@@ -199,7 +199,7 @@ namespace CatGame
             return _availableSpawnPoints.GetRandom().transform;
         }
 
-        public void PlayerJoined(Player player)
+        public virtual void PlayerJoined(Player player)
         {
             var statistics = player.Statistics;
 
@@ -281,13 +281,12 @@ namespace CatGame
         protected Agent SpawnAgent(PlayerRef playerRef, Vector3 position, Quaternion rotation)
         {
             var player = Context.NetworkGame.GetPlayer(playerRef);
-
+            ;
             if (player.AgentPrefabID.IsValid == false)
             {
                 Debug.Log("error prefab");
                 throw new InvalidOperationException(nameof(player.AgentPrefabID));
             }
-
             var agentObject = Runner.Spawn(player.AgentPrefabID, position, rotation, playerRef);
             var agent = agentObject.GetComponent<Agent>();
 
@@ -340,7 +339,7 @@ namespace CatGame
             player.DespawnAgent();
             TrySpawnAgent(player);
         }
-        private void RecalculatePositions() 
+        protected void RecalculatePositions() 
         {
             var allStatistics = ListPool.Get<PlayerStatistics>(MAX_PLAYERS);
 
@@ -391,7 +390,7 @@ namespace CatGame
             OnPlayerEliminated?.Invoke(playerRef);
         }
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, Channel = RpcChannel.Reliable)]
-        private void RPC_PlayerJoinedGame(PlayerRef playerRef)
+        protected void RPC_PlayerJoinedGame(PlayerRef playerRef)
         {
             OnPlayerJoinedGame?.Invoke(playerRef);
         }

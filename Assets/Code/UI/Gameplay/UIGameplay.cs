@@ -8,6 +8,17 @@ namespace CatGame.UI
 {
     public class UIGameplay : UIView
     {
+        //stats
+        [SerializeField]
+        private TextMeshProUGUI _heatlhText;
+        [SerializeField]
+        private TextMeshProUGUI _velocityText;
+        [SerializeField]
+        private TextMeshProUGUI _damage1Text;
+        [SerializeField]
+        private TextMeshProUGUI _damage2Text;
+
+
 
         [SerializeField]
         private TextMeshProUGUI _nickTex;
@@ -59,9 +70,14 @@ namespace CatGame.UI
             }
             _localAgent = agent;
             _localAgentId = player.Id;
-
             _nickTex.text = player.Nickname;
-            
+            _heatlhText.text = _localAgent.Health.MaxHealth.ToString();
+            _velocityText.text = _localAgent.Character.CharacteController.MaxSpeed.ToString();
+            var spell1 = _localAgent.Spells.GetSpell(0) as AreaSpell;
+            if (spell1 != null)
+            {
+                _damage1Text.text = spell1.GetDamage().ToString();
+            }
         }
         private void ClearLocalAgent() 
         {

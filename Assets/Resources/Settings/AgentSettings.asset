@@ -16,14 +16,12 @@ MonoBehaviour:
   - _id: Agent.Cat1
     _displayName: Cat1
     _description: gato
-    _icon: {fileID: 0}
-    _agentPrefabIndex: 2
-    _agentPrefab: {fileID: 2358926105992775402, guid: 1a976c41161157d4085138a39c8ad3eb, type: 3}
+    _icon: {fileID: 7538521140736745618, guid: 30eae55e85c859a41b04688ea89e54a9, type: 3}
+    _agentPrefab: {fileID: 4008003143211888081, guid: 975b1d4e23f6f6c4292c10b8dfccc601, type: 3}
     _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}
   - _id: Agent.Cat2
     _displayName: Cat2
     _description: gato
-    _icon: {fileID: 0}
-    _agentPrefabIndex: 3
-    _agentPrefab: {fileID: 2358926105992775402, guid: 1aed4c924c253644e809d789c0a83272, type: 3}
+    _icon: {fileID: 4621273872919005116, guid: 465aa1fac918f8b4fa4789b1c6178bfe, type: 3}
+    _agentPrefab: {fileID: 7217763084874407729, guid: d3892955d4b448b4fb902bcf4ba7de21, type: 3}
     _menuAgentPrefab: {fileID: 1845668329100954586, guid: cb1a8ada284ad5742bf0b74e5f7394f8, type: 3}

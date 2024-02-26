@@ -8,28 +8,35 @@ namespace CatGame
     {
         Agent agent;
         [SerializeField]
-        Animator animator;
+        private Animator animator;
         [SerializeField]
-        SpriteRenderer _renderer;
+        private SpriteRenderer _renderer;
         private void Awake()
         {
-            //animator = tryGetComponent<Animator>();
             agent = GetComponent<Agent>();
             agent.Health.HitTaken += AnimationTakeDamage;
         }
         private void AnimationTakeDamage(HitData data)
-        { 
+        {
+            if (animator == null)
+            {
+                return;
+            }
             animator.SetTrigger("Herido");
         }
         private void LateUpdate()
         {
-            if (agent.Character.CharacteController.VelocityT.x < -0.1f)
+            if (animator == null || _renderer == null)
+            {
+                return;
+            }
+            if (agent.Character.CharacteController.Velocity.x < -0.1f)
                 _renderer.flipX = true;
-            else if (agent.Character.CharacteController.VelocityT.x > 0.1f)
+            else if (agent.Character.CharacteController.Velocity.x > 0.1f)
                 _renderer.flipX = false;
             if (animator == null)
                 return;
-            animator.SetFloat("vel",agent.Character.CharacteController.VelocityT.magnitude);
+            animator.SetFloat("vel",agent.Character.CharacteController.Velocity.magnitude);
         }
     }
 }

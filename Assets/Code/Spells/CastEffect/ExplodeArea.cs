@@ -1,8 +1,5 @@
 using Fusion;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static Fusion.NetworkCharacterController;
 
 namespace CatGame
 {
@@ -14,14 +11,10 @@ namespace CatGame
         private EHitType _hitType;
 
         [SerializeField]
-        private float _innerRadius;
-        [SerializeField]
-        private float _outerRadius;
+        private float _radius;
 
         [SerializeField]
-        private float _innerHitValue;
-        [SerializeField]
-        private float _outerHitValue;
+        private float _hitValue;
         [SerializeField]
         private float _despawnDelay;
 
@@ -29,7 +22,14 @@ namespace CatGame
         private Transform _effectRoot;
 
         private TickTimer _despawnTimer;
-
+        public float GetDamage() 
+        {
+            if (Object == null)
+            {
+                return _hitValue;
+            }
+            return _hitValue + Context.NetworkGame.GetPlayer(Object.InputAuthority).ActiveAgent.Powerups.CharacterStats.ExrtaDamage;
+        }
         public override void Spawned()
         {
             base.Spawned();
@@ -55,24 +55,29 @@ namespace CatGame
 
             var position = transform.position;
 
-            int count = Runner.LagCompensation.OverlapSphere(position, _outerRadius, Object.InputAuthority, hits, _hitMask);
+            int count = Runner.LagCompensation.OverlapSphere(position, _radius, Object.InputAuthority, hits, _hitMask);
 
             var player = Context.NetworkGame.GetPlayer(Object.InputAuthority);
             var owner = player != null ? player.ActiveAgent : null;
-            Debug.Log(count);
             for ( int i = 0; i < count; i++ ) 
             {
                 var hit = hits[i];
-                Debug.Log(hit.GameObject.name);
                 if (hit.Hitbox == null)
                     continue;
                 var hitTarget = hit.Hitbox.Root.GetComponent<IHitTarget>();
                 if (hitTarget == null)
                     continue;
+                
+                int hitRootID2 = hit.Hitbox.Root.gameObject.GetInstanceID();
+                Debug.Log($"{Object.InputAuthority}  {hitRootID2}");
+                if (hitRootID2 == owner.GetInstanceID())
+                {
+                    continue;
+                }
+
                 int hitRootID = hit.Hitbox.Root.GetInstanceID();
                 if (hitRoots.Contains(hitRootID) == true)
                     continue;
-
                 var direction = hit.GameObject.transform.position - position;
                 float distance = direction.magnitude;
                 direction /= distance;
@@ -81,7 +86,7 @@ namespace CatGame
 
                 hitRoots.Add(hitRootID);
 
-                float damage = _innerHitValue;
+                float damage = GetDamage();
                 hit.Point = hit.GameObject.transform.position;
                 hit.Normal = -direction;
 
@@ -104,7 +109,7 @@ namespace CatGame
             if (_effectRoot != null)
             { 
                 _effectRoot.gameObject.SetActive(true);
-                _effectRoot.localScale = Vector2.one * _outerRadius * 2;
+                _effectRoot.localScale = Vector2.one * _radius * 2;
             }
         }
     }

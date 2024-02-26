@@ -1,3 +1,4 @@
+using CatGame.UI;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,25 +28,54 @@ namespace CatGame
 
         public void StartImmediately() 
         {
+            _waitForPlayers = TickTimer.None;
             if (Object.HasStateAuthority == true)
             {
                 StartGameMode();
-            }
-            
+            }            
         }
-
-        protected override void OnActivate()
-        {
-            _waitForPlayers = TickTimer.CreateFromSeconds(Runner, _waitForPlayersTime);
-        }
-        private void StartGameMode() 
+       
+        private void StartGameMode()
         {
             HasStarted = true;
-            _startCooldown = TickTimer.CreateFromSeconds(Runner,_delayStart);
+            RPC_StartVSGame();
+            SpawnAgents();
+            _startCooldown = TickTimer.CreateFromSeconds(Runner, _delayStart);
+
         }
         private void StopGameLobby()
         {
+            RPC_StartGame();
             LobbyActive = false;
+
+        }
+        public void SpawnAgents()
+        {
+            foreach (var player in Context.NetworkGame.Players)
+            {
+                if (player == null)
+                {
+                    continue;
+                }
+                TrySpawnAgent(player);
+            }
+        }
+        protected override void OnActivate()
+        {
+            _waitForPlayers = TickTimer.CreateFromSeconds(Runner, _waitForPlayersTime);
+            LobbyActive = true;
+        }
+
+        public override void PlayerJoined(Player player) 
+        {
+            var statistics = player.Statistics;
+
+            statistics.PlayerRef = player.Object.InputAuthority;
+
+            PreparePlayerStatistics(ref statistics);
+            player.UpdateStatistics(statistics);
+            RecalculatePositions();
+            RPC_PlayerJoinedGame(player.Object.InputAuthority);
         }
         public override void FixedUpdateNetwork()
         {
@@ -64,10 +94,6 @@ namespace CatGame
                 StopGameLobby();
             }
 
-            if (HasStarted == true && LobbyActive == false)
-            {
-                
-            }
         }
 
         protected override void AgentDeath(ref PlayerStatistics victimStatistic, ref PlayerStatistics killerStatistics)
@@ -96,7 +122,17 @@ namespace CatGame
                 }
             }
         }
-
-
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All, Channel = RpcChannel.Reliable)]
+        private void RPC_StartVSGame()
+        {
+            Context.UI.CloseView<UILobby>();
+            Context.UI.OpenView<UIStartVs>(); ;
+        }
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All, Channel = RpcChannel.Reliable)]
+        private void RPC_StartGame()
+        {
+            Context.UI.CloseView<UIStartVs>(); ;
+            Context.UI.OpenView<UIGameplay>(); ;
+        }
     }
 }

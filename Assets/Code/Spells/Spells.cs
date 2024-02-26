@@ -11,7 +11,6 @@ namespace CatGame
     {
         public Transform Active;
         public Transform Inactive;
-
     }
     public class Spells : NetworkBehaviour, IBeforeTick
     {
@@ -26,10 +25,15 @@ namespace CatGame
         [Networked,Capacity(8)]
         private NetworkArray<Spell> _spells { get; }
 
+        private bool _hasPower;
         private bool _spellsRefresh;
         private Agent _agent;
+
+        private bool refreshTarget;
+        private Vector2 target = Vector2.zero;
         public void OnSpawned() 
         {
+            target = transform.position;
             _spellsRefresh = true;
             if (Object.HasStateAuthority == false)
                 return;
@@ -45,6 +49,7 @@ namespace CatGame
         }
         public void OnDespawned() 
         {
+
             for (int i = 0; i < _spells.Length; i++)
             {
                 if (_spells[i] != null)
@@ -60,6 +65,16 @@ namespace CatGame
                 return;
             if (_agent.Health.IsAlive == false)
                 return;
+
+            if (_agent.Powerups.FullEnergy() == true)
+            {
+                _hasPower = true;
+            }
+            else
+            {
+                _hasPower = false;
+            }
+
         }
         public void OnLateFixedUpdate() 
         {
@@ -71,20 +86,18 @@ namespace CatGame
         }
         public bool CanCastSpell(bool keyDown, int slot) 
         {
+            
             if (slot >= _spells.Length)
                 return false;
             if (_spells[slot] == null)
                 return false;
+            if (_hasPower == false && slot == 1)
+            {
+                return false;
+            }
             return _spells[slot].CanCast(keyDown);
         }
-        public bool CanReloadSpell(bool autoReload, int slot)
-        {
-            if (slot >= _spells.Length)
-                return false;
-            if (_spells[slot] == null)
-                return false;
-            return _spells[slot].CanReload(autoReload);
-        }
+        
         public bool CanAim(int slot) 
         {
             if (slot >= _spells.Length)
@@ -94,13 +107,13 @@ namespace CatGame
             return _spells[slot].CanAinm();
         }
         public void TryInteract() { }
-        public bool HasSpell(int slot,bool checkEnergy)
+        public bool HasSpell(int slot)
         {
             if (slot < 0 || slot >= _spells.Length)
                 return false;
             var spell = _spells[slot];
             
-            return spell!=null && (checkEnergy ==  false || (spell.Object != null && spell.HasEnergy()));
+            return spell!=null;
         }
         public Spell GetSpell(int slot) 
         {
@@ -118,28 +131,13 @@ namespace CatGame
                 return false;
             var castPosition = _spells[spellSlot].gameObject.transform.position;
             var targetPosition = GetTargetPoint();
+            target = transform.position;
+            refreshTarget = true;
             spell.Cast(castPosition,targetPosition, _hitMask);
             return true;
         }
 
-        public bool AddEnergy(int spellSlot, int amount, out string result) 
-        {
-            if (spellSlot < 0 || spellSlot >= _spells.Length) 
-            {
-                result = string.Empty;
-                return false;
-            }
-            var spell = _spells[spellSlot];
-            if (spell != null) 
-            {
-                result = "Spell no recargable con energia";
-                return false;
-            }
-            bool energyAdded = spell.AddEnergy(amount);
-            result = energyAdded == true ? string.Empty : "no se pudo recargar energia";
-            return energyAdded;
-
-        }
+        
         void IBeforeTick.BeforeTick() 
         {
             RefreshSpells();
@@ -173,8 +171,14 @@ namespace CatGame
         }
         private Vector2 GetTargetPoint() 
         {
-            var target = _agent.AgentInput.FixedInput.AimLocation;
-            target += new Vector2(transform.position.x,transform.position.y);
+            if (refreshTarget == true)
+            {
+                target = transform.position;
+            }
+            refreshTarget = false;
+            var posXY = new Vector2(transform.position.x, transform.position.y);
+            var dir = _agent.AgentInput.FixedInput.AimLocation - posXY;
+            target += dir.normalized * 5 * Runner.DeltaTime; 
             return target;
         }
         private void AddSpell(Spell spell) 

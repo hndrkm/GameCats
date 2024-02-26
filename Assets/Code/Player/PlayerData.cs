@@ -21,6 +21,8 @@ namespace CatGame
         public string Nickname { get { return _nickname; } set { _nickname = value; IsDirty = true; } }
         public string AgentID { get { return _agentID; } set { _agentID = value; IsDirty = true; } }
 
+        public int Score { get { return _score; } set { _score = value; IsDirty = true; } }
+
         public bool IsDirty { get; private set; }
 
         [SerializeField]
@@ -29,6 +31,8 @@ namespace CatGame
         private string _nickname;
         [SerializeField]
         private string _agentID;
+        [SerializeField]
+        private int _score;
 
         [SerializeField]
         private bool _isLocked;

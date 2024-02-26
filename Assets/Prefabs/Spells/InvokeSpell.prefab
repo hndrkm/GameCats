@@ -78,15 +78,13 @@ MonoBehaviour:
   _hitType: 1
   _displayName: Invkoke fire
   _reloadTime: 2
-  _instanesPerCast: 1
+  _instanesPerCast: 3
   _castOnInputDownOnly: 0
-  _initialEnergy: 0
-  _maxEnergy: 0
-  _hasUnlimitedEnergy: 0
-  _castTrasnform: {fileID: 0}
-  _effectInvoke: {fileID: 0}
-  _areaRadio: 0
-  _minDespawnTime: 1
+  _dispersion: 2
+  _effectInvoke: {fileID: 6724100213958310184, guid: 2d1f7897897b6de439172eb879fa4a35, type: 3}
+  _speed: 1
+  _radius: 2
+  _minDespawnTime: 10
 --- !u!1 &4880191295994882444
 GameObject:
   m_ObjectHideFlags: 0

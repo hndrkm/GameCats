@@ -8,31 +8,8 @@ namespace CatGame.UI
     {
         [SerializeField]
         private float _gameOverScreenDelay = 3f;
-
-        //private UIDeathView _deathView;
-
         private bool _gameOverShown;
         private Coroutine _gameOverCoroutine;
-
-        // PUBLIC METHODS
-
-        public void RefreshCursorVisibility()
-        {
-            bool showCursor = false;
-
-            for (int i = 0; i < _views.Length; i++)
-            {
-                var view = _views[i];
-
-                if (view.IsOpen == true )
-                {
-                    showCursor = true;
-                    break;
-                }
-            }
-        }
-
-        // SceneUI INTERFACE
 
         protected override void OnInitializeInternal()
         {
@@ -84,18 +61,6 @@ namespace CatGame.UI
             }
         }
 
-        protected override void OnViewOpened(UIView view)
-        {
-            RefreshCursorVisibility();
-        }
-
-        protected override void OnViewClosed(UIView view)
-        {
-            RefreshCursorVisibility();
-        }
-
-        // PRIVATE METHODS
-
         private IEnumerator ShowGameOver_Coroutine(float delay)
         {
             yield return new WaitForSeconds(delay);
@@ -104,7 +69,7 @@ namespace CatGame.UI
 
             //_deathView.Close();
             CloseView<UIGameplay>();
-            //OpenView<UIGameOverView>();
+            OpenView<UIEndGame>();
 
             _gameOverCoroutine = null;
         }

@@ -46,6 +46,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _Nickname: 
+  _Statistics:
+    Extralives: 0
+    Kills: 0
+    Deaths: 0
+    Score: 0
+    Position: 0
+  _ActiveAgent: {fileID: 0}
+  _AgentPrefabID:
+    Value: 0
+  _IsReady:
+    _value: 0
 --- !u!114 &2185889164963304904
 MonoBehaviour:
   m_ObjectHideFlags: 0

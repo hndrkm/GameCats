@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CatGame.UI
 {
-    public class UIGameplayPanel : UIWidget
+    public class UIGameplayPanel : UIView
     {
         [SerializeField]
         private TextMeshProUGUI _mode;
@@ -20,6 +20,7 @@ namespace CatGame.UI
         private int _extraLastSeconds;
         private int _waitLastSeconds;
         private bool _isVersus;
+        
         protected override void OnVisible()
         {
             base.OnVisible();

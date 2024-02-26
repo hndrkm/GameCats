@@ -76,7 +76,7 @@ namespace CatGame.UI
                 MaxPlayers = System.Int32.Parse(_maxPlayers.text),
                 GameplayType = (EGameplayType)(_gameplay.value + 1),
                 ScenePath = _mapSetups[_maps.Selection].ScenePath,
-                isPrivate = _privateToggle.isOn,
+                isPrivate = !_privateToggle.isOn,
             };
             Context.Matchmaking.CreateSession(request);
         }

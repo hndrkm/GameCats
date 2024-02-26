@@ -48,11 +48,7 @@ namespace CatGame
         public virtual bool IsBusy(){ return false; }
         public abstract bool CanCast(bool inputDown);
         public abstract void Cast(Vector2 castPosition, Vector2 targetPosition,LayerMask hitMask);
-        public virtual bool CanReload(bool auntoReload) { return false; }
-        public virtual void Reload() { }
         public virtual bool CanAinm() { return false; }
-        public virtual bool HasEnergy() { return true; }
-        public virtual bool AddEnergy(int energy) { return false; }
         public void SetParent(Transform parentTrasform) 
         {
             transform.SetParent(parentTrasform,false);
