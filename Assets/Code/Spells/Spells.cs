@@ -30,7 +30,8 @@ namespace CatGame
         private Agent _agent;
 
         private bool refreshTarget;
-        private Vector2 target = Vector2.zero;
+        [Networked]
+        private Vector2 target { get; set; }
         public void OnSpawned() 
         {
             target = transform.position;
@@ -65,7 +66,7 @@ namespace CatGame
                 return;
             if (_agent.Health.IsAlive == false)
                 return;
-
+            
             if (_agent.Powerups.FullEnergy() == true)
             {
                 _hasPower = true;
@@ -82,7 +83,11 @@ namespace CatGame
         }
         public void OnRender() 
         {
-        
+            if (Object.HasInputAuthority)
+            {
+                _aimVisual.transform.position = target;
+            }
+            
         }
         public bool CanCastSpell(bool keyDown, int slot) 
         {
@@ -122,7 +127,7 @@ namespace CatGame
 
         public void Aim() 
         {
-            _aimVisual.transform.position = GetTargetPoint();
+            UpdateAimPosition();
         }
         public bool Cast(int spellSlot) 
         {
@@ -130,10 +135,12 @@ namespace CatGame
             if (spell == null)
                 return false;
             var castPosition = _spells[spellSlot].gameObject.transform.position;
-            var targetPosition = GetTargetPoint();
+            var targetPosition = target;
+            spell.Cast(castPosition,targetPosition, _hitMask);
+            
             target = transform.position;
             refreshTarget = true;
-            spell.Cast(castPosition,targetPosition, _hitMask);
+            
             return true;
         }
 
@@ -169,16 +176,13 @@ namespace CatGame
                 return;
             AddSpell(spell);
         }
-        private Vector2 GetTargetPoint() 
+        
+        private Vector2 UpdateAimPosition() 
         {
-            if (refreshTarget == true)
-            {
-                target = transform.position;
-            }
-            refreshTarget = false;
-            var posXY = new Vector2(transform.position.x, transform.position.y);
-            var dir = _agent.AgentInput.FixedInput.AimLocation - posXY;
-            target += dir.normalized * 5 * Runner.DeltaTime; 
+            var dir = _agent.AgentInput.FixedInput.AimLocation.normalized;
+            var pos = new Vector2(transform.position.x, transform.position.y);
+
+            target = Vector2.MoveTowards(target, target + dir, Runner.DeltaTime * 4);
             return target;
         }
         private void AddSpell(Spell spell) 

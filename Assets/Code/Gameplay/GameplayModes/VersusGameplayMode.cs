@@ -126,13 +126,14 @@ namespace CatGame
         private void RPC_StartVSGame()
         {
             Context.UI.CloseView<UILobby>();
-            Context.UI.OpenView<UIStartVs>(); ;
+            Context.UI.OpenView<UIStartVs>(); 
         }
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, Channel = RpcChannel.Reliable)]
         private void RPC_StartGame()
         {
-            Context.UI.CloseView<UIStartVs>(); ;
-            Context.UI.OpenView<UIGameplay>(); ;
+            Context.UI.CloseView<UIStartVs>(); 
+            Context.UI.OpenView<UIGameplay>();
+            Context.UI.OpenView<UIMobileInput>();
         }
     }
 }

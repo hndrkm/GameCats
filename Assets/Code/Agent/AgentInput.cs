@@ -1,3 +1,4 @@
+using CatGame.UI;
 using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using System;
@@ -39,6 +40,7 @@ namespace CatGame
         private int _logMissingInputFromTick;
         private float _reloadStartTime;
 
+        private UIMobileInput _mobileInput;
 
         public bool HasActive(EGameplayInputAction action)
         {
@@ -195,12 +197,45 @@ namespace CatGame
             Vector2 moveDirection;
             Vector2 aimLocation = Vector2.zero;
 
-
             Mouse mouse = Mouse.current;
             Keyboard keyboard = Keyboard.current;
-            Vector2 mousePosition = mouse.delta.ReadValue()*0.05f;
 
+
+            if (_mobileInput == null)
+            {
+                if (Context!=null && Context.UI != null)
+                {
+                    _mobileInput = Context.UI.GetView<UIMobileInput>();
+                }
+                return;
+            }
+            /*           
             moveDirection = Vector2.zero;
+            if (keyboard.wKey.isPressed == true) { moveDirection += Vector2.up; }
+            if (keyboard.sKey.isPressed == true) { moveDirection += Vector2.down; }
+            if (keyboard.aKey.isPressed == true) { moveDirection += Vector2.left; }
+            if (keyboard.dKey.isPressed == true) { moveDirection += Vector2.right; }
+
+            if (moveDirection.x == 0 && moveDirection.y == 0)
+            {
+                moveDirection.Normalize();
+            }
+            */
+            moveDirection = _mobileInput.Move.normalized;
+
+
+            //Vector2 mousePosition = mouse.delta.ReadValue() * 0.05f;
+            Vector2 aimPosition = _mobileInput.Aim;
+            //Debug.Log($"{moveDirection}, .... ,{mousePosition}");
+            if (_mobileInput.PressedAim && !_mobileInput.PressCast)
+                _cachedAimDirection = default;
+            if (_mobileInput.PressAim || _mobileInput.PressCast)
+            {
+                aimLocation = aimPosition;
+                _cachedAimDirection += aimLocation;
+            }
+
+            /*
             if (mouse.leftButton.wasPressedThisFrame)
                 _cachedAimDirection = default;
             if (mouse.leftButton.isPressed)
@@ -208,23 +243,15 @@ namespace CatGame
                 aimLocation = mousePosition*Global.RuntimeSettings.AimSensitivity;
                 _cachedAimDirection += aimLocation;
             }
-
-
-            if (keyboard.wKey.isPressed == true) { moveDirection += Vector2.up; }
-                if (keyboard.sKey.isPressed == true) { moveDirection += Vector2.down; }
-                if (keyboard.aKey.isPressed == true) { moveDirection += Vector2.left; }
-                if (keyboard.dKey.isPressed == true) { moveDirection += Vector2.right; }
-            
-            if (moveDirection.x ==0 && moveDirection.y ==0)
-            {
-                moveDirection.Normalize();
-            }
-           
-            
+            */
             _renderInput.MoveDirection = moveDirection;
             _renderInput.AimLocation = _cachedAimDirection;
-            _renderInput.Aim = mouse.leftButton.isPressed;
-            _renderInput.Attack = mouse.leftButton.wasReleasedThisFrame;
+            //_renderInput.Aim = mouse.leftButton.isPressed;
+            //_renderInput.Attack = mouse.leftButton.wasReleasedThisFrame;
+
+            _renderInput.Aim = _mobileInput.PressAim;
+            _renderInput.Attack = _mobileInput.PressCast;
+
             _renderInput.Power = keyboard.eKey.isPressed;
             _renderInput.Reload = keyboard.rKey.isPressed;
             _renderInput.Interact = keyboard.fKey.isPressed;
@@ -233,13 +260,6 @@ namespace CatGame
 #else
 			_renderInput.ToggleSpeed       = keyboard.leftCtrlKey.isPressed & keyboard.leftAltKey.isPressed & keyboard.backquoteKey.isPressed;
 #endif
-            /*
-            if (mouse.leftButton.wasReleasedThisFrame)
-            {
-                _cachedAimDirection = default;
-            }
-            */
-            
             float deltaTime = Time.deltaTime;
             _cachedMoveDirection += moveDirection * deltaTime;
             _cachedMoveDirectionSize += deltaTime;
